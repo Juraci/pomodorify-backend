@@ -1,0 +1,27 @@
+{
+  "name": "pomodorify-backend",
+  "version": "0.0.1",
+  "description": "Pomodorify backend services",
+  "main": "index.js",
+  "scripts": {
+    "start": "babel-node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test-integration": "mocha --opts test/integration/mocha.opts test/integration/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/Juraci/pomodorify-backend"
+  },
+  "author": "Juraci Vieira <juraci.vieira@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "babel-cli": "^6.14.0",
+    "babel-preset-es2015": "^6.14.0",
+    "express": "^4.14.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.0.2",
+    "supertest": "^2.0.0"
+  }
+}
