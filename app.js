@@ -1,7 +1,15 @@
 import express from 'express';
+import cors from 'cors';
 import Sequelize from 'sequelize';
 
 const app = express();
+
+const corsOptions = {
+  origin: 'http://localhost:4200',
+  methods: ['GET', 'PUT', 'POST', 'DELETE']
+}
+
+app.use(cors(corsOptions));
 
 const sequelize = new Sequelize('postgres', 'postgres', 'postgres', {
   host: 'localhost',
@@ -33,6 +41,21 @@ app.route('/')
   .get((req, res) => {
     Goal.findOne().then((goal) => {
       res.status(200).json(goal);
+    });
+  });
+
+app.route('/goals')
+  .get((req, res) => {
+    res.status(200).json({
+      data: [
+        {
+        type: 'goals',
+        id: 1,
+          attributes: {
+            description: 'Goal from the backend'
+          }
+      }
+      ]
     });
   });
 
