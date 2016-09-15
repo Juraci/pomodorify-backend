@@ -1,30 +1,19 @@
 import express from 'express';
 import cors from 'cors';
-import Sequelize from 'sequelize';
+import config from './config/config';
+import datasource from './config/datasource';
 
 const app = express();
 
-const corsOptions = {
-  origin: 'http://localhost:4200',
-  methods: ['GET', 'PUT', 'POST', 'DELETE']
-}
+app.use(cors(config.corsOptions));
 
-app.use(cors(corsOptions));
+app.config = config;
 
-const sequelize = new Sequelize('postgres', 'postgres', 'postgres', {
-  host: 'localhost',
-  dialect: 'postgres',
+let db = datasource(app);
 
-  pool: {
-    max: 5,
-    min: 0,
-    idle: 10000
-  }
-});
-
-let Goal = sequelize.define('goal', {
+let Goal = db.sequelize.define('goal', {
   description: {
-    type: Sequelize.STRING,
+    type: db.Sequelize.STRING,
     field: 'description'
   }
 }, {

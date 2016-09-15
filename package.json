@@ -6,7 +6,7 @@
   "scripts": {
     "start": "babel-node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "test-integration": "mocha --opts test/integration/mocha.opts test/integration/*.js"
+    "integration-tests": "mocha --opts test/integration/mocha.opts test/integration/*.js"
   },
   "repository": {
     "type": "git",
