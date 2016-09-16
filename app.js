@@ -6,46 +6,30 @@ import datasource from './config/datasource';
 const app = express();
 
 app.use(cors(config.corsOptions));
-
 app.config = config;
-
-let db = datasource(app);
-
-let Goal = db.sequelize.define('goal', {
-  description: {
-    type: db.Sequelize.STRING,
-    field: 'description'
-  }
-}, {
-  freezeTableName: true
-});
-
-Goal.sync({force: true}).then(() => {
-  return Goal.create({
-    description: 'Lear sequelize'
-  });
-});
-
-app.route('/')
-  .get((req, res) => {
-    Goal.findOne().then((goal) => {
-      res.status(200).json(goal);
-    });
-  });
+app.db = datasource(app);
 
 app.route('/goals')
   .get((req, res) => {
-    res.status(200).json({
-      data: [
-        {
-        type: 'goals',
-        id: 1,
-          attributes: {
-            description: 'Goal from the backend'
+    app.db.models.Goal.findAll().then((goals) => {
+      let goalsObj = { data: [] };
+      goals.forEach((goal) => {
+        goalsObj.data.push(
+          {
+            type: 'goals',
+            id: goals[0].id,
+            attributes: {
+              description: goals[0].description
+            }
           }
-      }
-      ]
-    });
+        );
+      });
+      res.status(200).json(goalsObj);
+    })
+      .catch((err) => {
+        console.log('Error: ', err);
+        res.sendStatus(404);
+      });
   });
 
 export default app;

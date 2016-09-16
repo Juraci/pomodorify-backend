@@ -1,16 +1,23 @@
 import Sequelize from 'sequelize';
+import Goal from '../models/Goal';
 
 let database = null;
+
+const loadModels = (sequelize, DataType) => {
+  let models = [];
+  models['Goal'] = Goal(sequelize, DataType);
+  return models;
+};
 
 export default (app) => {
   if(!database) {
     const config = app.config,
-    sequelize = new Sequelize(
-      config.database,
-      config.username,
-      config.password,
-      config.params
-    );
+      sequelize = new Sequelize(
+        config.database,
+        config.username,
+        config.password,
+        config.params
+      );
 
     database = {
       sequelize,
@@ -18,9 +25,7 @@ export default (app) => {
       models: {}
     };
 
-    sequelize.sync().done(() => {
-      return database;
-    });
+    database.models = loadModels(sequelize, Sequelize);
   }
 
   return database;
