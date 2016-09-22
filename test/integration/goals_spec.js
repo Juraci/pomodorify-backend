@@ -1,9 +1,9 @@
 describe('goals', function() {
-  const Goal = app.db.models.Goal;
+  const Goal = app.datasource.models.Goal;
 
   describe('GET /goals', function() {
     beforeEach((done) => {
-      app.db.sequelize.sync().then(() => {
+      app.datasource.sequelize.sync().then(() => {
         Goal
         .destroy({ where: {} })
         .then(() => {
