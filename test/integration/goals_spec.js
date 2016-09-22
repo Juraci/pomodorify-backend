@@ -19,7 +19,6 @@ describe('goals', function() {
         .get('/goals')
         .end((err, res) => {
           expect(res.status).to.equal(200);
-          console.log(JSON.stringify(res.body));
           expect(res.body.data).to.have.length(1);
           expect(res.body.data[0].attributes.description).to.equal('Learn Node.js');
           done(err);
