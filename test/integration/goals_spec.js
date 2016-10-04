@@ -1,17 +1,25 @@
 describe('goals', function() {
   const Goal = app.datasource.models.Goal;
 
+  beforeEach((done) => {
+    app.datasource.sequelize.sync().then(() => {
+      Goal
+        .destroy({ where: {} })
+        .then(() => {
+          done();
+        });
+    });
+  });
+
   describe('GET /goals', function() {
     beforeEach((done) => {
       app.datasource.sequelize.sync().then(() => {
-        Goal
-          .destroy({ where: {} })
+        Goal.create({ description: 'Feel comfortable with Node.js' })
           .then(() => {
-            return Goal.create({ description: 'Feel comfortable with Node.js' });
-          }).then(() => {
             done();
           });
       });
+
     });
 
     it('returns all existing goals', function(done) {
@@ -35,14 +43,6 @@ describe('goals', function() {
         }
       }
     }
-
-    beforeEach((done) => {
-      Goal
-        .destroy({ where: {} })
-        .then(() => {
-          done();
-        });
-    });
 
     it('creates a new goal', function(done) {
       request
