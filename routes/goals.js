@@ -24,5 +24,13 @@ export default (datasource) => {
         });
     });
 
+  router.route('/:id')
+    .delete((req, res) => {
+      goalsController.deleteById(req.params.id)
+        .then((result) => {
+          res.sendStatus(result.status);
+        });
+    });
+
   return router;
 };

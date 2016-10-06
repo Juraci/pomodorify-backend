@@ -41,6 +41,16 @@ class GoalsController {
       });
   }
 
+  deleteById(id) {
+    return this.Goal.destroy({ where: { id: parseInt(id) } })
+      .then(() => {
+        return { status: 204 };
+      })
+      .catch((err) => {
+        return { data: err, status: 400 };
+      });
+  }
+
 }
 
 export default GoalsController;

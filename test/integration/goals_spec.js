@@ -19,7 +19,6 @@ describe('goals', function() {
             done();
           });
       });
-
     });
 
     it('returns all existing goals', function(done) {
@@ -48,6 +47,29 @@ describe('goals', function() {
       request
         .post('/goals')
         .send(goal)
+        .end((err, res) => {
+          expect(res.status).to.equal(204);
+          done(err);
+        });
+    });
+  });
+
+  describe('DELETE /goals/:id', function() {
+    let goalId;
+
+    beforeEach((done) => {
+      app.datasource.sequelize.sync().then(() => {
+        Goal.create({ description: 'Feel comfortable with Node.js' })
+          .then(goal => {
+            goalId = goal.id;
+            done();
+          });
+      });
+    });
+
+    it('deletes a goal', function(done) {
+      request
+        .del(`/goals/${goalId}`)
         .end((err, res) => {
           expect(res.status).to.equal(204);
           done(err);

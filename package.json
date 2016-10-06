@@ -6,7 +6,8 @@
   "scripts": {
     "start": "babel-node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "integration-tests": "mocha --opts test/integration/mocha.opts test/integration/*.js"
+    "integration-tests": "mocha --opts test/integration/mocha.opts test/integration/*.js",
+    "unit-tests": "mocha --opts test/unit/mocha.opts test/unit/**/*.js"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,8 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "mocha": "^3.0.2",
+    "sinon": "^1.17.6",
+    "sinon-chai": "^2.8.0",
     "supertest": "^2.0.0"
   }
 }
