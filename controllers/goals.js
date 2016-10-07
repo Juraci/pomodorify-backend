@@ -13,7 +13,9 @@ class GoalsController {
               type: 'goals',
               id: goal.id,
               attributes: {
-                description: goal.description
+                description: goal.description,
+                createdAt: goal.createdAt,
+                updatedAt: goal.updatedAt
               }
             }
           );
