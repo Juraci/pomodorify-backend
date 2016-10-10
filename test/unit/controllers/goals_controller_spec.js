@@ -25,7 +25,7 @@ describe('GoalsController', function() {
       Goal.findAll.reset();
     });
 
-    it('should call findAll on the Goal model', function(done) {
+    it('should send findAll message to Goal model', function(done) {
       goalsController.findAll()
         .then(() => {
           expect(Goal.findAll).to.have.been.calledOnce;
@@ -39,6 +39,36 @@ describe('GoalsController', function() {
         .then((result) => {
           expect(result.status).to.be.equal(200);
           expect(result.data.data).to.have.length(1);
+          done();
+        })
+        .catch(err => done(err));
+    });
+  });
+
+  describe('#create', function() {
+    const Goal = {
+      create() {
+        return Promise.resolve(true);
+      }
+    };
+
+    let goalsController;
+    sinon.spy(Goal, 'create');
+
+    beforeEach(() => {
+      goalsController = new GoalsController(Goal);
+    });
+
+    afterEach(() => {
+      Goal.create.reset();
+    });
+
+    it('should send create message on the Goal model passing the goal object', function(done) {
+      let goal = { description: 'Feel comfortable with Node.js' };
+
+      goalsController.create(goal)
+        .then(() => {
+          expect(Goal.create).to.have.been.calledWith(goal);
           done();
         })
         .catch(err => done(err));
@@ -63,7 +93,7 @@ describe('GoalsController', function() {
       Goal.destroy.reset();
     });
 
-    it('should call destroy on Goal model passing the id', function(done) {
+    it('should send destroy message on Goal model passing the id', function(done) {
       goalsController.deleteById('1')
         .then(() => {
           expect(Goal.destroy).to.have.been.calledOnce;
