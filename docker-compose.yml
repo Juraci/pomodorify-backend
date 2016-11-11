@@ -1,0 +1,21 @@
+version: '2'
+services:
+  pomodorify-backend:
+    build:
+      context: .
+    environment:
+      NODE_ENV: development
+    depends_on:
+      - db
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/home/app/pomodorify-backend
+      - /home/app/pomodorify-backend/node_modules
+  db:
+    image: postgres:9.6
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=pomodorify
