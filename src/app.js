@@ -14,5 +14,4 @@ app.datasource = datasource(app);
 
 app.use('/goals', goals(app.datasource));
 
-
 export default app;

@@ -1,4 +1,4 @@
-import GoalsController from '../../../controllers/goals';
+import GoalsController from '../../../src/controllers/goals';
 
 describe('GoalsController', function() {
   describe('#findAll', function() {

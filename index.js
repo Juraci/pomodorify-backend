@@ -1,4 +1,4 @@
-import app from './app.js';
+var app = require('./build/app.js').default;
 
 app.datasource.sequelize.sync().then(() => {
   app.listen(3000, () => {
