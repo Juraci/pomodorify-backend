@@ -27,7 +27,10 @@ describe('goals', function() {
         .end((err, res) => {
           expect(res.status).to.equal(200);
           expect(res.body.data).to.have.length(1);
-          expect(res.body.data[0].attributes.description).to.equal('Feel comfortable with Node.js');
+          expect(res.body.data[0]).to.have.any.keys('id');
+          expect(res.body.data[0].type).to.be.equal('goals');
+          expect(res.body.data[0].attributes.description).to.be.equal('Feel comfortable with Node.js');
+          expect(res.body.data[0].attributes).to.have.all.keys('createdAt', 'updatedAt', 'description');
           done(err);
         });
     });
