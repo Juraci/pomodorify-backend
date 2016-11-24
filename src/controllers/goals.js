@@ -9,8 +9,8 @@ class GoalsController {
     return this.Goal.findAll()
       .then((goals) => {
         return {
-          data: GoalSerializer.serialize(goals),
-          status: 200
+          status: 200,
+          data: GoalSerializer.serialize(goals)
         };
       })
       .catch((err) => {
@@ -23,8 +23,11 @@ class GoalsController {
 
   create(goal) {
     return this.Goal.create(goal)
-      .then(() => {
-        return { status: 204 };
+      .then((record) => {
+        return {
+          status: 201,
+          data: GoalSerializer.serialize(record)
+        };
       })
       .catch((err) => {
         return { data: err, status: 400 };

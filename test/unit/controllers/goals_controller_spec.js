@@ -1,13 +1,14 @@
 import GoalsController from '../../../src/controllers/goals';
 
 describe('GoalsController', function() {
-  describe('#findAll', function() {
-    const defaultGoal = {
-      destription: 'Feel comfortable with Node.js development',
-      createdAt: '2016-10-06T20:11:32.598Z',
-      updatedAt: '2016-10-06T20:11:32.598Z'
-    };
+  const defaultGoal = {
+    id: '123',
+    description: 'Feel comfortable with Node.js development',
+    createdAt: '2016-10-06T20:11:32.598Z',
+    updatedAt: '2016-10-06T20:11:32.598Z'
+  };
 
+  describe('#findAll', function() {
     const Goal = {
       findAll() {
         return Promise.resolve([defaultGoal]);
@@ -48,7 +49,7 @@ describe('GoalsController', function() {
   describe('#create', function() {
     const Goal = {
       create() {
-        return Promise.resolve(true);
+        return Promise.resolve(defaultGoal);
       }
     };
 
@@ -67,8 +68,12 @@ describe('GoalsController', function() {
       let goal = { description: 'Feel comfortable with Node.js' };
 
       goalsController.create(goal)
-        .then(() => {
+        .then((result) => {
           expect(Goal.create).to.have.been.calledWith(goal);
+          expect(result.status).to.be.equal(201);
+          expect(result.data.data.type).to.be.equal('goals');
+          expect(result.data.data.attributes.description).to.be.equal('Feel comfortable with Node.js development');
+          expect(result.data.data.attributes).to.have.all.keys('created-at', 'updated-at', 'description');
           done();
         })
         .catch(err => done(err));

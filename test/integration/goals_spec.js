@@ -51,7 +51,10 @@ describe('goals', function() {
         .post('/goals')
         .send(goal)
         .end((err, res) => {
-          expect(res.status).to.equal(204);
+          expect(res.status).to.equal(201);
+          expect(res.body.data.type).to.be.equal('goals');
+          expect(res.body.data.attributes.description).to.be.equal('Feel comfortable with CSS');
+          expect(res.body.data.attributes).to.have.all.keys('created-at', 'updated-at', 'description');
           done(err);
         });
     });

@@ -20,7 +20,7 @@ export default (datasource) => {
       let goal = req.body.data.attributes;
       goalsController.create(goal)
         .then((result) => {
-          res.sendStatus(result.status);
+          res.status(result.status).json(result.data);
         });
     });
 
