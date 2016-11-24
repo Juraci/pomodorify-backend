@@ -12,7 +12,7 @@ const startApp = () => {
     });
   })
   .catch((err) => {
-    if (err.name.match(/ConnectionRefusedError/) && connectionAttempts <= connectionMaxAttempts) {
+    if (err.name.match(/SequelizeConnection/) && connectionAttempts <= connectionMaxAttempts) {
       connectionAttempts++;
 
       console.log('>>> db connection failed, attempt: ', connectionAttempts);
