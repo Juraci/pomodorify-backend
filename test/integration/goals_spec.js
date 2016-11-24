@@ -30,7 +30,7 @@ describe('goals', function() {
           expect(res.body.data[0]).to.have.any.keys('id');
           expect(res.body.data[0].type).to.be.equal('goals');
           expect(res.body.data[0].attributes.description).to.be.equal('Feel comfortable with Node.js');
-          expect(res.body.data[0].attributes).to.have.all.keys('createdAt', 'updatedAt', 'description');
+          expect(res.body.data[0].attributes).to.have.all.keys('created-at', 'updated-at', 'description');
           done(err);
         });
     });

@@ -1,3 +1,5 @@
+import GoalSerializer from '../serializers/goal';
+
 class GoalsController {
   constructor(Goal) {
     this.Goal = Goal;
@@ -6,22 +8,8 @@ class GoalsController {
   findAll() {
     return this.Goal.findAll()
       .then((goals) => {
-        let goalsObj = { data: [] };
-        goals.forEach((goal) => {
-          goalsObj.data.push(
-            {
-              type: 'goals',
-              id: goal.id,
-              attributes: {
-                description: goal.description,
-                createdAt: goal.createdAt,
-                updatedAt: goal.updatedAt
-              }
-            }
-          );
-        });
         return {
-          data: goalsObj,
+          data: GoalSerializer.serialize(goals),
           status: 200
         };
       })
