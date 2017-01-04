@@ -8,17 +8,14 @@ export default class TasksController {
   findAll() {
     return this.Task.findAll()
       .then((tasks) => {
-        console.log('>>> Find All');
        let response =  {
           status: 200,
           data: TaskSerializer.serialize(tasks)
         };
 
-        console.log('>> response', response.data);
         return response;
       })
       .catch((err) => {
-        console.log('>>>', err);
         return {
           data: err,
           status: 404
