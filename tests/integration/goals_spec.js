@@ -13,12 +13,13 @@ describe('goals', function() {
 
   describe('GET /goals', function() {
     beforeEach((done) => {
-      app.datasource.sequelize.sync().then(() => {
-        Goal.create({ description: 'Feel comfortable with Node.js' })
-          .then(() => {
-            done();
-          });
-      });
+      app.datasource.sequelize.sync()
+        .then(() => {
+          Goal.create({ description: 'Feel comfortable with Node.js' })
+            .then(() => {
+              done();
+            });
+        });
     });
 
     it('returns all existing goals', function(done) {

@@ -1,11 +1,13 @@
 import Sequelize from 'sequelize';
 import Goal from '../models/Goal';
+import Task from '../models/Task';
 
 let database = null;
 
 const loadModels = (sequelize, DataType) => {
   let models = [];
   models['Goal'] = Goal(sequelize, DataType);
+  models['Task'] = Task(sequelize, DataType);
   return models;
 };
 

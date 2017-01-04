@@ -16,7 +16,7 @@ class GoalsController {
       .catch((err) => {
         return {
           data: err,
-          sattus: 404
+          satus: 404
         }
       });
   }
