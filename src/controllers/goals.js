@@ -21,6 +21,22 @@ class GoalsController {
       });
   }
 
+  findById(id) {
+    return this.Goal.find({ where: { id: parseInt(id) } })
+      .then((goal) => {
+        return {
+          status: 200,
+          data: GoalSerializer.serialize(goal)
+        };
+      })
+      .catch((err) => {
+        return {
+          status: 404,
+          data: err
+        };
+      });
+  }
+
   create(goal) {
     return this.Goal.create(goal)
       .then((record) => {

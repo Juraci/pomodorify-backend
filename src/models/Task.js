@@ -1,5 +1,5 @@
 export default (sequelize, DataType) => {
-  return sequelize.define('task', {
+  const Task = sequelize.define('task', {
     description: {
       type: DataType.STRING,
       allowNull: false,
@@ -7,5 +7,16 @@ export default (sequelize, DataType) => {
         notEmpty: true
       }
     }
-  });
+  },
+    {
+      classMethods: {
+        associate: (models) => {
+          console.log('aossicating Task');
+          Task.belongsTo(models.Goal);
+        }
+      }
+    }
+  );
+
+  return Task;
 }

@@ -13,7 +13,6 @@ export default (datasource) => {
     .get((req, res) => {
       tasksController.findAll()
         .then((result) => {
-          console.log('>>> result', result);
           res.status(result.status).json(result.data);
         });
     })

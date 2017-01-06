@@ -37,6 +37,31 @@ describe('goals', function() {
     });
   });
 
+  describe('GET /goals/:id', function() {
+    let goalId;
+
+    beforeEach((done) => {
+      app.datasource.sequelize.sync()
+        .then(() => {
+          Goal.create({ description: 'Feel comfortable with React' })
+            .then((record) => {
+              goalId = record.id;
+              done();
+            });
+        });
+    });
+
+    it('returns the goal by its id', function(done) {
+      request
+        .get(`/goals/${goalId}`)
+        .end((err, res) => {
+          expect(res.status).to.equal(200);
+          expect(parseInt(res.body.data.id)).to.be.equal(goalId);
+          done(err);
+        });
+    });
+  });
+
   describe('POST /goals', function() {
     const goal = {
       data: {

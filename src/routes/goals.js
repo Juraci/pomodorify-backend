@@ -6,8 +6,7 @@ const router = express.Router();
 const jsonParser = bodyParser.json();
 
 export default (datasource) => {
-  const Goal = datasource.models.Goal;
-  const goalsController = new GoalsController(Goal);
+  const goalsController = new GoalsController(datasource.models);
 
   router.route('/')
     .get((req, res) => {
@@ -25,6 +24,12 @@ export default (datasource) => {
     });
 
   router.route('/:id')
+    .get((req, res) => {
+      goalsController.findById(req.params.id)
+        .then((result) => {
+          res.status(result.status).json(result.data);
+        });
+    })
     .delete((req, res) => {
       goalsController.deleteById(req.params.id)
         .then((result) => {

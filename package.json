@@ -7,6 +7,7 @@
     "start": "npm run build && node index.js",
     "build": "rm -rf ./build && babel src -d build",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "seed": "node ./scripts/seeds/default.js",
     "integration-tests": "mocha --opts tests/integration/mocha.opts tests/integration/*.js",
     "unit-tests": "mocha --opts tests/unit/mocha.opts tests/unit/**/*.js"
   },

@@ -6,8 +6,8 @@ let database = null;
 
 const loadModels = (sequelize, DataType) => {
   let models = [];
-  models['Goal'] = Goal(sequelize, DataType);
   models['Task'] = Task(sequelize, DataType);
+  models['Goal'] = Goal(sequelize, DataType);
   return models;
 };
 
@@ -28,6 +28,13 @@ export default (app) => {
     };
 
     database.models = loadModels(sequelize, Sequelize);
+    Object.keys(database.models)
+      .filter((m) => {
+        return database.models[m].hasOwnProperty('associate');
+      })
+      .forEach((m) => {
+        database.models[m].associate(database.models);
+      });
   }
 
   return database;

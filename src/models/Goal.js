@@ -1,5 +1,5 @@
 export default (sequelize, DataType) => {
-  return sequelize.define('goal', {
+  const Goal = sequelize.define('goal', {
     description: {
       type: DataType.STRING,
       allowNull: false,
@@ -7,5 +7,15 @@ export default (sequelize, DataType) => {
         notEmpty: true
       }
     }
-  });
+  },
+    {
+      classMethods: {
+        associate: (models) => {
+          Goal.hasMany(models.Task, {as: 'tasks'});
+        }
+      }
+    }
+  );
+
+  return Goal;
 }
