@@ -1,40 +1,51 @@
 import GoalSerializer from '../serializers/goal';
 
 class GoalsController {
-  constructor(Goal) {
-    this.Goal = Goal;
+  constructor(models) {
+    this.Goal = models.Goal;
+    this.Task = models.Task
+  }
+
+  defaultResponseOk(data) {
+    return {
+      status: 200,
+      data
+    };
+  }
+
+  notFound(error) {
+    return {
+      status: 404,
+      data: {
+        errors: [
+          {
+            title: 'not found',
+            detail: error
+          }
+        ]
+      }
+    };
+  }
+
+  serialize(data) {
+    return GoalSerializer.serialize(data);
   }
 
   findAll() {
-    return this.Goal.findAll()
-      .then((goals) => {
-        return {
-          status: 200,
-          data: GoalSerializer.serialize(goals)
-        };
-      })
-      .catch((err) => {
-        return {
-          data: err,
-          satus: 404
-        }
-      });
+    return this.Goal.findAll({ include: [{model: this.Task, as: 'tasks'}] })
+      .then(goals => this.serialize(goals))
+      .then(data => this.defaultResponseOk(data))
+      .catch(err => this.notFound(err));
   }
 
   findById(id) {
     return this.Goal.find({ where: { id: parseInt(id) } })
-      .then((goal) => {
-        return {
-          status: 200,
-          data: GoalSerializer.serialize(goal)
-        };
+      .then(goal => {
+        if(!goal) { throw 'goal not found'; }
+        return this.serialize(goal);
       })
-      .catch((err) => {
-        return {
-          status: 404,
-          data: err
-        };
-      });
+      .then(data => this.defaultResponseOk(data))
+      .catch(err => this.notFound(err));
   }
 
   create(goal) {

@@ -60,6 +60,20 @@ describe('goals', function() {
           done(err);
         });
     });
+
+    context("when the goal id doesn't exist", function() {
+      it('returns 404 not found JSONAPI compliant', function(done) {
+        request
+          .get('/goals/666')
+          .end((err, res) => {
+            expect(res.status).to.equal(404);
+            expect(res.body.errors).to.have.length(1);
+            expect(res.body.errors[0].title).to.be.equal('not found');
+            expect(res.body.errors[0].detail).to.be.equal('goal not found');
+            done(err);
+          });
+      });
+    });
   });
 
   describe('POST /goals', function() {
