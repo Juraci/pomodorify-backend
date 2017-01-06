@@ -11,7 +11,6 @@ export default (sequelize, DataType) => {
     {
       classMethods: {
         associate: (models) => {
-          console.log('aossicating Task');
           Task.belongsTo(models.Goal);
         }
       }
