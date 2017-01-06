@@ -13,6 +13,6 @@ export default {
   },
   corsOptions: {
     origin: 'http://localhost:4200',
-    methods: ['GET', 'PUT', 'POST', 'DELETE']
+    methods: ['GET', 'PUT', 'POST', 'DELETE', 'PATCH']
   }
 }
