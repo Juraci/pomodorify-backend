@@ -24,5 +24,11 @@ export default (datasource) => {
         });
     });
 
+  router.route('/:id')
+    .get((req, res) => {
+      tasksController.findById(req.params.id)
+      .then(result => res.status(result.status).json(result.data));
+    });
+
   return router;
 }

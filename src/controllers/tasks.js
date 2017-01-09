@@ -5,10 +5,34 @@ export default class TasksController {
     this.Task = Task;
   }
 
+  serialize(data) {
+    return TaskSerializer.serialize(data);
+  }
+
+  defaultResponseOk(data) {
+    return {
+      status: 200,
+      data
+    };
+  }
+
+  notFound(error) {
+    return {
+      status: 404,
+      data: {
+        errors: [
+          {
+            detail: error
+          }
+        ]
+      }
+    };
+  }
+
   findAll() {
     return this.Task.findAll()
       .then((tasks) => {
-       let response =  {
+        let response =  {
           status: 200,
           data: TaskSerializer.serialize(tasks)
         };
@@ -21,6 +45,16 @@ export default class TasksController {
           status: 404
         };
       });
+  }
+
+  findById(id) {
+    return this.Task.find({ where: { id: parseInt(id) } })
+      .then(task => {
+        if(!task) { throw 'task not found'; }
+        return this.serialize(task);
+      })
+      .then(data => this.defaultResponseOk(data))
+      .catch(err => this.notFound(err));
   }
 
   create(task) {
