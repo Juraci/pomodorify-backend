@@ -38,14 +38,14 @@ describe('goals', function() {
   });
 
   describe('GET /goals/:id', function() {
-    let goalId;
+    let goal;
 
     beforeEach((done) => {
       app.datasource.sequelize.sync()
         .then(() => {
-          Goal.create({ description: 'Feel comfortable with React' })
+          Goal.create({ description: 'Feel confortable with React' })
             .then((record) => {
-              goalId = record.id;
+              goal = record;
               done();
             });
         });
@@ -53,10 +53,10 @@ describe('goals', function() {
 
     it('returns the goal by its id', function(done) {
       request
-        .get(`/goals/${goalId}`)
+        .get(`/goals/${goal.id}`)
         .end((err, res) => {
           expect(res.status).to.equal(200);
-          expect(parseInt(res.body.data.id)).to.be.equal(goalId);
+          expect(res.body.data.attributes.description).to.equal('Feel confortable with React');
           done(err);
         });
     });

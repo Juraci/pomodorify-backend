@@ -20,7 +20,7 @@ describe('goals', function() {
               done();
             });
         });
-    })
+    });
 
     it('returns all existing tasks', function(done) {
       request
