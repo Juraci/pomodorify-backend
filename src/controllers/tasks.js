@@ -20,6 +20,13 @@ export default class TasksController {
     };
   }
 
+  defaultResponseCreated(data) {
+    return {
+      status: 201,
+      data
+    };
+  }
+
   notFound(error) {
     return {
       status: 404,
@@ -61,15 +68,23 @@ export default class TasksController {
       .catch(err => this.notFound(err));
   }
 
+  mountTaskObject(data) {
+    let obj;
+    if(data.hasOwnProperty('goal')) {
+      obj = { description: data.description, goalId: data.goal.id };
+    } else {
+      obj = { description: data.description };
+    }
+
+    return obj;
+  }
+
   create(task) {
     return this.deserialize(task)
-      .then(result => this.Task.create({ description: result.description, goalId: result.goal.id }))
-      .then((record) => {
-        return {
-          status: 201,
-          data: this.serialize(record)
-        };
-      })
+      .then(deserializedTask => this.mountTaskObject(deserializedTask))
+      .then(taskObject => this.Task.create(taskObject))
+      .then(record => this.serialize(record))
+      .then(serializedRecord => this.defaultResponseCreated(serializedRecord))
       .catch((err) => {
         return { data: err, status: 400 };
       });

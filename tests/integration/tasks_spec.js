@@ -13,6 +13,28 @@ describe('goals', function() {
   });
 
   describe('POST /tasks', function() {
+    context('when posting the task without relationship', function() {
+      it('should create the task', function(done) {
+        const task = {
+          data: {
+            attributes: {
+              description: "Rock and Roll with Ember.js - Read chapter 1"
+            },
+            type: "tasks"
+          }
+        };
+
+        request
+          .post('/tasks')
+          .send(task)
+          .end((err, res) => {
+            expect(res.status).to.equal(201);
+            expect(res.body.data.type).to.be.equal('tasks');
+            done(err);
+          });
+      });
+    });
+
     context('when posting with relationship', function() {
       let goal;
 
@@ -27,7 +49,7 @@ describe('goals', function() {
           });
       });
 
-      it('should create the task related to the goal', function(done) {
+      it('should create the task that belongs to a goal', function(done) {
         const task = {
           data: {
             attributes: {
