@@ -17,8 +17,7 @@ export default (datasource) => {
         });
     })
     .post(jsonParser, (req, res) => {
-      const task = req.body.data.attributes;
-      tasksController.create(task)
+      tasksController.create(req.body)
         .then((result) => {
           res.status(result.status).json(result.data);
         });

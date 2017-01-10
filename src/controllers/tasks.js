@@ -1,4 +1,4 @@
-import TaskSerializer from '../serializers/task';
+import { serializer, deserializer } from '../serializers/task';
 
 export default class TasksController {
   constructor(Task) {
@@ -6,7 +6,11 @@ export default class TasksController {
   }
 
   serialize(data) {
-    return TaskSerializer.serialize(data);
+    return serializer.serialize(data);
+  }
+
+  deserialize(data) {
+    return deserializer.deserialize(data);
   }
 
   defaultResponseOk(data) {
@@ -34,7 +38,7 @@ export default class TasksController {
       .then((tasks) => {
         let response =  {
           status: 200,
-          data: TaskSerializer.serialize(tasks)
+          data: this.serialize(tasks)
         };
 
         return response;
@@ -58,11 +62,12 @@ export default class TasksController {
   }
 
   create(task) {
-    return this.Task.create(task)
+    return this.deserialize(task)
+      .then(result => this.Task.create({ description: result.description, goalId: result.goal.id }))
       .then((record) => {
         return {
           status: 201,
-          data: TaskSerializer.serialize(record)
+          data: this.serialize(record)
         };
       })
       .catch((err) => {

@@ -1,5 +1,6 @@
 describe('goals', function() {
   const Task = app.datasource.models.Task;
+  const Goal = app.datasource.models.Goal;
 
   beforeEach((done) => {
     app.datasource.sequelize.sync().then(() => {
@@ -8,6 +9,55 @@ describe('goals', function() {
         .then(() => {
           done();
         });
+    });
+  });
+
+  describe('POST /tasks', function() {
+    context('when posting with relationship', function() {
+      let goal;
+
+      beforeEach((done) => {
+        app.datasource.sequelize.sync()
+          .then(() => {
+            Goal.create({ description: 'Feel comfortable with Ember.js' })
+              .then((record) => {
+                goal = record;
+                done();
+              });
+          });
+      });
+
+      it('should create the task related to the goal', function(done) {
+        const task = {
+          data: {
+            attributes: {
+              description: "Rock and Roll with Ember.js - Read chapter 1"
+            },
+            relationships: {
+              goal: {
+                data: {
+                  type: "goals",
+                  id: `${goal.id}`
+                }
+              }
+            },
+            type: "tasks"
+          }
+        };
+
+        request
+          .post('/tasks')
+          .send(task)
+          .end((err, res) => {
+            expect(res.status).to.equal(201);
+            expect(res.body.data.type).to.be.equal('tasks');
+            Task.find({ where: { id: res.body.data.id } })
+              .then((record) => {
+                expect(record.goalId).to.be.equal(goal.id);
+                done(err);
+              });
+          });
+      });
     });
   });
 
