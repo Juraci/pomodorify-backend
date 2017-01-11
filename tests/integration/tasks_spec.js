@@ -1,4 +1,4 @@
-describe('goals', function() {
+describe('tasks', function() {
   const Task = app.datasource.models.Task;
   const Goal = app.datasource.models.Goal;
 

@@ -3,13 +3,14 @@ export default {
   username: 'postgres',
   password: 'postgres',
   params: {
-    host: 'db',
-      dialect: 'postgres',
-        pool: {
-          max: 5,
-            min: 0,
-            idle: 10000
-        }
+    host: 'localhost',
+    dialect: 'postgres',
+    pool: {
+      max: 5,
+      min: 0,
+      idle: 10000
+    },
+    logging: false
   },
   corsOptions: {
     origin: 'http://localhost:4200',
