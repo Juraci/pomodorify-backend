@@ -50,7 +50,7 @@ describe('goals', function() {
             done();
           })
           .catch(err => done(err));
-      })
+      });
 
       it('should return the related tasks', function(done) {
         request
@@ -105,6 +105,36 @@ describe('goals', function() {
             expect(res.body.errors).to.have.length(1);
             expect(res.body.errors[0].title).to.be.equal('not found');
             expect(res.body.errors[0].detail).to.be.equal('goal not found');
+            done(err);
+          });
+      });
+    });
+
+    context('when the goal has related tasks', function() {
+      let task;
+
+      beforeEach(done => {
+        Task.create({ description: 'Code School - Real time web with Node Lvl 1', goalId: goal.id })
+          .then(newTask => {
+            task = newTask;
+            done();
+          })
+          .catch(err => done(err));
+      });
+
+      it('should return the goal and its related tasks', function(done) {
+        request
+          .get(`/goals/${goal.id}`)
+          .end((err, res) => {
+            expect(res.status).to.equal(200);
+            const record = res.body.data;
+            expect(record).to.have.property('relationships');
+            expect(record.relationships.tasks.data).to.have.length(1);
+            expect(record.relationships.tasks.data[0].id).to.be.equal(`${task.id}`);
+            expect(res.body).to.have.property('included');
+            expect(res.body.included[0].type).to.be.equal('tasks');
+            expect(res.body.included[0].id).to.be.equal(`${task.id}`);
+            expect(res.body.included[0].attributes.description).to.be.equal(task.description);
             done(err);
           });
       });

@@ -39,7 +39,7 @@ class GoalsController {
   }
 
   findById(id) {
-    return this.Goal.find({ where: { id: parseInt(id) } })
+    return this.Goal.find({ where: { id: parseInt(id) }, include: [{model: this.Task, as: 'tasks'}] })
       .then(goal => {
         if(!goal) { throw 'goal not found'; }
         return this.serialize(goal);
