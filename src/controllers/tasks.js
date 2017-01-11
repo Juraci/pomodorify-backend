@@ -40,20 +40,25 @@ export default class TasksController {
     };
   }
 
+  mountTaskObject(data) {
+    let obj;
+    if(data.hasOwnProperty('goal')) {
+      obj = { description: data.description, goalId: data.goal.id };
+    } else {
+      obj = { description: data.description };
+    }
+
+    return obj;
+  }
+
   findAll() {
     return this.Task.findAll()
-      .then((tasks) => {
-        let response =  {
-          status: 200,
-          data: this.serialize(tasks)
-        };
-
-        return response;
-      })
-      .catch((err) => {
+      .then(tasks => this.serialize(tasks))
+      .then(serializedTasks => this.defaultResponseOk(serializedTasks))
+      .catch(err => {
         return {
           data: err,
-          status: 404
+          status: 500
         };
       });
   }
@@ -66,17 +71,6 @@ export default class TasksController {
       })
       .then(data => this.defaultResponseOk(data))
       .catch(err => this.notFound(err));
-  }
-
-  mountTaskObject(data) {
-    let obj;
-    if(data.hasOwnProperty('goal')) {
-      obj = { description: data.description, goalId: data.goal.id };
-    } else {
-      obj = { description: data.description };
-    }
-
-    return obj;
   }
 
   create(task) {
