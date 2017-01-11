@@ -5,44 +5,44 @@ export default class TasksController {
     this.Task = Task;
   }
 
-  serialize(data) {
+  static serialize(data) {
     return serializer.serialize(data);
   }
 
-  deserialize(data) {
+  static deserialize(data) {
     return deserializer.deserialize(data);
   }
 
-  defaultResponseOk(data) {
+  static defaultResponseOk(data) {
     return {
       status: 200,
-      data
+      data,
     };
   }
 
-  defaultResponseCreated(data) {
+  static defaultResponseCreated(data) {
     return {
       status: 201,
-      data
+      data,
     };
   }
 
-  notFound(error) {
+  static notFound(error) {
     return {
       status: 404,
       data: {
         errors: [
           {
-            detail: error
-          }
-        ]
-      }
+            detail: error.message,
+          },
+        ],
+      },
     };
   }
 
-  mountTaskObject(data) {
+  static mountTaskObject(data) {
     let obj;
-    if(data.hasOwnProperty('goal')) {
+    if (Object.prototype.hasOwnProperty.call(data, 'goal')) {
       obj = { description: data.description, goalId: data.goal.id };
     } else {
       obj = { description: data.description };
@@ -53,34 +53,30 @@ export default class TasksController {
 
   findAll() {
     return this.Task.findAll()
-      .then(tasks => this.serialize(tasks))
-      .then(serializedTasks => this.defaultResponseOk(serializedTasks))
-      .catch(err => {
-        return {
-          data: err,
-          status: 500
-        };
-      });
+      .then(tasks => TasksController.serialize(tasks))
+      .then(serializedTasks => TasksController.defaultResponseOk(serializedTasks))
+      .catch(err => ({
+        data: err,
+        status: 500,
+      }));
   }
 
   findById(id) {
-    return this.Task.find({ where: { id: parseInt(id) } })
-      .then(task => {
-        if(!task) { throw 'task not found'; }
-        return this.serialize(task);
+    return this.Task.find({ where: { id: parseInt(id, 10) } })
+      .then((task) => {
+        if (!task) { throw new Error('task not found'); }
+        return TasksController.serialize(task);
       })
-      .then(data => this.defaultResponseOk(data))
-      .catch(err => this.notFound(err));
+      .then(data => TasksController.defaultResponseOk(data))
+      .catch(err => TasksController.notFound(err));
   }
 
   create(task) {
-    return this.deserialize(task)
-      .then(deserializedTask => this.mountTaskObject(deserializedTask))
+    return TasksController.deserialize(task)
+      .then(deserializedTask => TasksController.mountTaskObject(deserializedTask))
       .then(taskObject => this.Task.create(taskObject))
-      .then(record => this.serialize(record))
-      .then(serializedRecord => this.defaultResponseCreated(serializedRecord))
-      .catch((err) => {
-        return { data: err, status: 400 };
-      });
+      .then(record => TasksController.serialize(record))
+      .then(serializedRecord => TasksController.defaultResponseCreated(serializedRecord))
+      .catch(err => ({ data: err, status: 400 }));
   }
 }

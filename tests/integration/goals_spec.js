@@ -1,8 +1,8 @@
-describe('goals', function() {
+describe('goals', () => {
   const Goal = app.datasource.models.Goal;
   const Task = app.datasource.models.Task;
 
-  beforeEach(done => {
+  beforeEach((done) => {
     app.datasource.sequelize.sync().then(() => {
       Goal
         .destroy({ where: {} })
@@ -12,21 +12,21 @@ describe('goals', function() {
     });
   });
 
-  describe('GET /goals', function() {
+  describe('GET /goals', () => {
     let goal;
 
-    beforeEach(done => {
+    beforeEach((done) => {
       app.datasource.sequelize.sync()
         .then(() => {
           Goal.create({ description: 'Feel comfortable with Node.js' })
-            .then(newGoal => {
+            .then((newGoal) => {
               goal = newGoal;
               done();
             });
         });
     });
 
-    it('returns all existing goals', function(done) {
+    it('returns all existing goals', (done) => {
       request
         .get('/goals')
         .end((err, res) => {
@@ -41,18 +41,18 @@ describe('goals', function() {
         });
     });
 
-    context('when the goal has related tasks', function() {
+    context('when the goal has related tasks', () => {
       let task;
-      beforeEach(done => {
+      beforeEach((done) => {
         Task.create({ description: 'Code School - Real time web with Node Lvl 1', goalId: goal.id })
-          .then(newTask => {
+          .then((newTask) => {
             task = newTask;
             done();
           })
           .catch(err => done(err));
       });
 
-      it('should return the related tasks', function(done) {
+      it('should return the related tasks', (done) => {
         request
           .get('/goals')
           .end((err, res) => {
@@ -72,7 +72,7 @@ describe('goals', function() {
     });
   });
 
-  describe('GET /goals/:id', function() {
+  describe('GET /goals/:id', () => {
     let goal;
 
     beforeEach((done) => {
@@ -86,7 +86,7 @@ describe('goals', function() {
         });
     });
 
-    it('returns the goal by its id', function(done) {
+    it('returns the goal by its id', (done) => {
       request
         .get(`/goals/${goal.id}`)
         .end((err, res) => {
@@ -96,33 +96,32 @@ describe('goals', function() {
         });
     });
 
-    context("when the goal id doesn't exist", function() {
-      it('returns 404 not found JSONAPI compliant', function(done) {
+    context("when the goal id doesn't exist", () => {
+      it('returns 404 not found JSONAPI compliant', (done) => {
         request
           .get('/goals/666')
           .end((err, res) => {
             expect(res.status).to.equal(404);
             expect(res.body.errors).to.have.length(1);
-            expect(res.body.errors[0].title).to.be.equal('not found');
             expect(res.body.errors[0].detail).to.be.equal('goal not found');
             done(err);
           });
       });
     });
 
-    context('when the goal has related tasks', function() {
+    context('when the goal has related tasks', () => {
       let task;
 
-      beforeEach(done => {
+      beforeEach((done) => {
         Task.create({ description: 'Code School - Real time web with Node Lvl 1', goalId: goal.id })
-          .then(newTask => {
+          .then((newTask) => {
             task = newTask;
             done();
           })
           .catch(err => done(err));
       });
 
-      it('should return the goal and its related tasks', function(done) {
+      it('should return the goal and its related tasks', (done) => {
         request
           .get(`/goals/${goal.id}`)
           .end((err, res) => {
@@ -141,17 +140,17 @@ describe('goals', function() {
     });
   });
 
-  describe('POST /goals', function() {
+  describe('POST /goals', () => {
     const goal = {
       data: {
         type: 'goals',
         attributes: {
-          description: 'Feel comfortable with CSS'
-        }
-      }
-    }
+          description: 'Feel comfortable with CSS',
+        },
+      },
+    };
 
-    it('creates a new goal', function(done) {
+    it('creates a new goal', (done) => {
       request
         .post('/goals')
         .send(goal)
@@ -165,20 +164,20 @@ describe('goals', function() {
     });
   });
 
-  describe('DELETE /goals/:id', function() {
+  describe('DELETE /goals/:id', () => {
     let goalId;
 
     beforeEach((done) => {
       app.datasource.sequelize.sync().then(() => {
         Goal.create({ description: 'Feel comfortable with Node.js' })
-          .then(goal => {
+          .then((goal) => {
             goalId = goal.id;
             done();
           });
       });
     });
 
-    it('deletes a goal', function(done) {
+    it('deletes a goal', (done) => {
       request
         .del(`/goals/${goalId}`)
         .end((err, res) => {

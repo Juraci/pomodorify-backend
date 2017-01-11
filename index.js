@@ -13,10 +13,9 @@ const startApp = () => {
   })
   .catch((err) => {
     if (err.name.match(/SequelizeConnection/) && connectionAttempts <= connectionMaxAttempts) {
-      connectionAttempts++;
+      connectionAttempts += 1;
 
       console.log('>>> db connection failed, attempt: ', connectionAttempts);
-
       setTimeout(() => {
         startApp();
       }, connectionRetryTime);

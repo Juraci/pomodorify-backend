@@ -1,4 +1,4 @@
-describe('tasks', function() {
+describe('tasks', () => {
   const Task = app.datasource.models.Task;
   const Goal = app.datasource.models.Goal;
 
@@ -12,16 +12,16 @@ describe('tasks', function() {
     });
   });
 
-  describe('POST /tasks', function() {
-    context('when posting the task without relationship', function() {
-      it('should create the task', function(done) {
+  describe('POST /tasks', () => {
+    context('when posting the task without relationship', () => {
+      it('should create the task', (done) => {
         const task = {
           data: {
             attributes: {
-              description: "Rock and Roll with Ember.js - Read chapter 1"
+              description: 'Rock and Roll with Ember.js - Read chapter 1',
             },
-            type: "tasks"
-          }
+            type: 'tasks',
+          },
         };
 
         request
@@ -35,7 +35,7 @@ describe('tasks', function() {
       });
     });
 
-    context('when posting with relationship', function() {
+    context('when posting with relationship', () => {
       let goal;
 
       beforeEach((done) => {
@@ -49,22 +49,22 @@ describe('tasks', function() {
           });
       });
 
-      it('should create the task that belongs to a goal', function(done) {
+      it('should create the task that belongs to a goal', (done) => {
         const task = {
           data: {
             attributes: {
-              description: "Rock and Roll with Ember.js - Read chapter 1"
+              description: 'Rock and Roll with Ember.js - Read chapter 1',
             },
             relationships: {
               goal: {
                 data: {
-                  type: "goals",
-                  id: `${goal.id}`
-                }
-              }
+                  type: 'goals',
+                  id: `${goal.id}`,
+                },
+              },
             },
-            type: "tasks"
-          }
+            type: 'tasks',
+          },
         };
 
         request
@@ -83,7 +83,7 @@ describe('tasks', function() {
     });
   });
 
-  describe('GET /tasks', function() {
+  describe('GET /tasks', () => {
     beforeEach((done) => {
       app.datasource.sequelize.sync()
         .then(() => {
@@ -94,7 +94,7 @@ describe('tasks', function() {
         });
     });
 
-    it('returns all existing tasks', function(done) {
+    it('returns all existing tasks', (done) => {
       request
         .get('/tasks')
         .end((err, res) => {
@@ -102,24 +102,24 @@ describe('tasks', function() {
           expect(res.body.data).to.have.length(1);
           done(err);
         });
-    })
+    });
   });
 
-  describe('GET /tasks/:id', function() {
+  describe('GET /tasks/:id', () => {
     let task;
 
     beforeEach((done) => {
       app.datasource.sequelize.sync()
         .then(() => {
           Task.create({ description: 'Read the first chapter of Rock and Roll with Ember.js' })
-            .then(newTask => {
-              task = newTask
+            .then((newTask) => {
+              task = newTask;
               done();
             });
         });
     });
 
-    it('returns a task based on its id', function(done) {
+    it('returns a task based on its id', (done) => {
       request
         .get(`/tasks/${task.id}`)
         .end((err, res) => {
@@ -129,8 +129,8 @@ describe('tasks', function() {
         });
     });
 
-    context('when the task does not exist', function() {
-      it('returns 404 not found', function(done) {
+    context('when the task does not exist', () => {
+      it('returns 404 not found', (done) => {
         request
           .get('/tasks/666')
           .end((err, res) => {

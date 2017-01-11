@@ -4,18 +4,18 @@ export default (sequelize, DataType) => {
       type: DataType.STRING,
       allowNull: false,
       validate: {
-        notEmpty: true
-      }
-    }
+        notEmpty: true,
+      },
+    },
   },
     {
       classMethods: {
         associate: (models) => {
           Task.belongsTo(models.Goal);
-        }
-      }
-    }
+        },
+      },
+    },
   );
 
   return Task;
-}
+};

@@ -1,18 +1,18 @@
 import GoalsController from '../../../src/controllers/goals';
 
-describe('GoalsController', function() {
+describe('GoalsController', () => {
   const defaultGoal = {
     id: '123',
     description: 'Feel comfortable with Node.js development',
     createdAt: '2016-10-06T20:11:32.598Z',
-    updatedAt: '2016-10-06T20:11:32.598Z'
+    updatedAt: '2016-10-06T20:11:32.598Z',
   };
 
-  describe('#findAll', function() {
+  describe('#findAll', () => {
     const Goal = {
       findAll() {
         return Promise.resolve([defaultGoal]);
-      }
+      },
     };
 
     let goalsController;
@@ -26,16 +26,17 @@ describe('GoalsController', function() {
       Goal.findAll.reset();
     });
 
-    it('should send findAll message to Goal model', function(done) {
+    it('should send findAll message to Goal model', (done) => {
       goalsController.findAll()
         .then(() => {
+          // eslint-disable-next-line no-unused-expressions
           expect(Goal.findAll).to.have.been.calledOnce;
           done();
         })
         .catch(err => done(err));
     });
 
-    it('returns the collection of Goals', function(done) {
+    it('returns the collection of Goals', (done) => {
       goalsController.findAll()
         .then((result) => {
           expect(result.status).to.be.equal(200);
@@ -46,11 +47,11 @@ describe('GoalsController', function() {
     });
   });
 
-  describe('#create', function() {
+  describe('#create', () => {
     const Goal = {
       create() {
         return Promise.resolve(defaultGoal);
-      }
+      },
     };
 
     let goalsController;
@@ -64,8 +65,8 @@ describe('GoalsController', function() {
       Goal.create.reset();
     });
 
-    it('should send create message on the Goal model passing the goal object', function(done) {
-      let goal = { description: 'Feel comfortable with Node.js' };
+    it('should send create message on the Goal model passing the goal object', (done) => {
+      const goal = { description: 'Feel comfortable with Node.js' };
 
       goalsController.create(goal)
         .then((result) => {
@@ -80,12 +81,12 @@ describe('GoalsController', function() {
     });
   });
 
-  describe('#deleteById', function() {
+  describe('#deleteById', () => {
     const Goal = {
       destroy() {
         return Promise.resolve(1);
-      }
-    }
+      },
+    };
 
     let goalsController;
     sinon.spy(Goal, 'destroy');
@@ -98,21 +99,22 @@ describe('GoalsController', function() {
       Goal.destroy.reset();
     });
 
-    it('should send destroy message on Goal model passing the id', function(done) {
+    it('should send destroy message on Goal model passing the id', (done) => {
       goalsController.deleteById('1')
         .then(() => {
+          // eslint-disable-next-line no-unused-expressions
           expect(Goal.destroy).to.have.been.calledOnce;
           expect(Goal.destroy).to.have.been.calledWith({ where: { id: 1 } });
-          done()
+          done();
         })
         .catch(err => done(err));
     });
 
-    it('returns 204 on success', function(done) {
+    it('returns 204 on success', (done) => {
       goalsController.deleteById('1')
-        .then(result => {
+        .then((result) => {
           expect(result.status).to.be.equal(204);
-          done()
+          done();
         })
         .catch(error => done(error));
     });

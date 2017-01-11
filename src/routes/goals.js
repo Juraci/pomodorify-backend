@@ -16,7 +16,7 @@ export default (datasource) => {
         });
     })
     .post(jsonParser, (req, res) => {
-      let goal = req.body.data.attributes;
+      const goal = req.body.data.attributes;
       goalsController.create(goal)
         .then((result) => {
           res.status(result.status).json(result.data);
