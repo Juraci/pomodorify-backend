@@ -1,7 +1,8 @@
 describe('goals', function() {
   const Goal = app.datasource.models.Goal;
+  const Task = app.datasource.models.Task;
 
-  beforeEach((done) => {
+  beforeEach(done => {
     app.datasource.sequelize.sync().then(() => {
       Goal
         .destroy({ where: {} })
@@ -12,11 +13,14 @@ describe('goals', function() {
   });
 
   describe('GET /goals', function() {
-    beforeEach((done) => {
+    let goal;
+
+    beforeEach(done => {
       app.datasource.sequelize.sync()
         .then(() => {
           Goal.create({ description: 'Feel comfortable with Node.js' })
-            .then(() => {
+            .then(newGoal => {
+              goal = newGoal;
               done();
             });
         });
@@ -28,12 +32,43 @@ describe('goals', function() {
         .end((err, res) => {
           expect(res.status).to.equal(200);
           expect(res.body.data).to.have.length(1);
-          expect(res.body.data[0]).to.have.any.keys('id');
-          expect(res.body.data[0].type).to.be.equal('goals');
-          expect(res.body.data[0].attributes.description).to.be.equal('Feel comfortable with Node.js');
-          expect(res.body.data[0].attributes).to.have.all.keys('created-at', 'updated-at', 'description');
+          const record = res.body.data[0];
+          expect(record).to.have.any.keys('id');
+          expect(record.type).to.be.equal('goals');
+          expect(record.attributes.description).to.be.equal('Feel comfortable with Node.js');
+          expect(record.attributes).to.have.all.keys('created-at', 'updated-at', 'description');
           done(err);
         });
+    });
+
+    context('when the goal has related tasks', function() {
+      let task;
+      beforeEach(done => {
+        Task.create({ description: 'Code School - Real time web with Node Lvl 1', goalId: goal.id })
+          .then(newTask => {
+            task = newTask;
+            done();
+          })
+          .catch(err => done(err));
+      })
+
+      it('should return the related tasks', function(done) {
+        request
+          .get('/goals')
+          .end((err, res) => {
+            expect(res.status).to.equal(200);
+            expect(res.body.data).to.have.length(1);
+            const record = res.body.data[0];
+            expect(record).to.have.property('relationships');
+            expect(record.relationships.tasks.data).to.have.length(1);
+            expect(record.relationships.tasks.data[0].id).to.be.equal(`${task.id}`);
+            expect(res.body).to.have.property('included');
+            expect(res.body.included[0].type).to.be.equal('tasks');
+            expect(res.body.included[0].id).to.be.equal(`${task.id}`);
+            expect(res.body.included[0].attributes.description).to.be.equal(task.description);
+            done(err);
+          });
+      });
     });
   });
 
