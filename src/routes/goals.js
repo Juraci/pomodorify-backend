@@ -34,6 +34,12 @@ export default (datasource) => {
         .then((result) => {
           res.sendStatus(result.status);
         });
+    })
+    .patch(jsonParser, (req, res) => {
+      goalsController.updateById(req.params.id, req.body)
+        .then(result => {
+          res.sendStatus(result.status);
+        });
     });
 
   return router;

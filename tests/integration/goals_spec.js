@@ -186,4 +186,41 @@ describe('goals', () => {
         });
     });
   });
+
+  describe('PATCH /goals/:id', () => {
+    let goal;
+    const updatedGoal = {
+      data: {
+        type: 'goals',
+        attributes: {
+          description: 'Feel comfortable with CSS',
+        },
+      },
+    };
+
+    beforeEach((done) => {
+      app.datasource.sequelize.sync()
+        .then(() => {
+          Goal.create({ description: 'Feel comfortable with Node.js' })
+            .then((newGoal) => {
+              goal = newGoal;
+              done();
+            });
+        });
+    });
+
+    it('updates the goal', (done) => {
+      request
+        .patch(`/goals/${goal.id}`)
+        .send(updatedGoal)
+        .end((err, res) => {
+          expect(res.status).to.equal(204);
+          Goal.find({ where: { id: goal.id }})
+            .then(record => {
+              expect(record.description).to.be.equal(updatedGoal.data.attributes.description);
+              done(err);
+            });
+        })
+    });
+  });
 });

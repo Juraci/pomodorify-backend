@@ -38,6 +38,16 @@ class GoalsController extends ApplicationController {
       .then(() => ApplicationController.noContent())
       .catch(err => ApplicationController.jsonApiError(500, err));
   }
+
+  updateById(id, goal) {
+    return this.deserialize(goal)
+      .then(deserializedGoal => this.Goal.update(deserializedGoal, { where: { id: parseInt(id, 10) } } ))
+      .then(result => {
+        if(result[0] !== 1) { throw new Error('goal not found'); }
+        return ApplicationController.noContent();
+      })
+      .catch(err => ApplicationController.jsonApiError(404, err));
+  }
 }
 
 export default GoalsController;
