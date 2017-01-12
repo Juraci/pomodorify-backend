@@ -185,6 +185,19 @@ describe('goals', () => {
           done(err);
         });
     });
+
+    context('when trying to delete a goal that does not exist', () => {
+      it('returns 404 json api compliant error', (done) => {
+        request
+          .del('/goals/666')
+          .end((err, res) => {
+            expect(res.status).to.equal(404);
+            expect(res.body.errors).to.have.length(1);
+            expect(res.body.errors[0].detail).to.be.equal('goal not found');
+            done(err);
+          });
+      });
+    });
   });
 
   describe('PATCH /goals/:id', () => {
@@ -215,12 +228,26 @@ describe('goals', () => {
         .send(updatedGoal)
         .end((err, res) => {
           expect(res.status).to.equal(204);
-          Goal.find({ where: { id: goal.id }})
-            .then(record => {
+          Goal.find({ where: { id: goal.id } })
+            .then((record) => {
               expect(record.description).to.be.equal(updatedGoal.data.attributes.description);
               done(err);
             });
-        })
+        });
+    });
+
+    context('when trying to update a goal that does not exist', () => {
+      it('returns 404 json api compliant error', (done) => {
+        request
+          .patch('/goals/666')
+          .send(updatedGoal)
+          .end((err, res) => {
+            expect(res.status).to.equal(404);
+            expect(res.body.errors).to.have.length(1);
+            expect(res.body.errors[0].detail).to.be.equal('goal not found');
+            done(err);
+          });
+      });
     });
   });
 });

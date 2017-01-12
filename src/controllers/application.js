@@ -28,7 +28,7 @@ class ApplicationController {
   }
 
   static noContent() {
-    return { status: 204 };
+    return ApplicationController.defaultResponse(204, { data: 'No content' });
   }
 
   static jsonApiError(status, error) {

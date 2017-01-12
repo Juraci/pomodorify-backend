@@ -12,15 +12,11 @@ export default (datasource) => {
   router.route('/')
     .get((req, res) => {
       tasksController.findAll()
-        .then((result) => {
-          res.status(result.status).json(result.data);
-        });
+        .then(result => res.status(result.status).json(result.data));
     })
     .post(jsonParser, (req, res) => {
       tasksController.create(req.body)
-        .then((result) => {
-          res.status(result.status).json(result.data);
-        });
+        .then(result => res.status(result.status).json(result.data));
     });
 
   router.route('/:id')
