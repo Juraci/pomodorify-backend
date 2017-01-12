@@ -1,7 +1,9 @@
-import GoalSerializer from '../serializers/goal';
+import ApplicationController from './application';
+import { serializer, deserializer } from '../serializers/goal';
 
-class GoalsController {
+class GoalsController extends ApplicationController {
   constructor(models) {
+    super({ serializer, deserializer });
     this.Goal = models.Goal;
     this.Task = models.Task;
   }
@@ -26,13 +28,9 @@ class GoalsController {
     };
   }
 
-  static serialize(data) {
-    return GoalSerializer.serialize(data);
-  }
-
   findAll() {
     return this.Goal.findAll({ include: [{ model: this.Task, as: 'tasks' }] })
-      .then(goals => GoalsController.serialize(goals))
+      .then(goals => this.serialize(goals))
       .then(data => GoalsController.defaultResponseOk(data))
       .catch(err => GoalsController.notFound(err));
   }
@@ -41,17 +39,18 @@ class GoalsController {
     return this.Goal.find({ where: { id: parseInt(id, 10) }, include: [{ model: this.Task, as: 'tasks' }] })
       .then((goal) => {
         if (!goal) { throw new Error('goal not found'); }
-        return GoalsController.serialize(goal);
+        return this.serialize(goal);
       })
       .then(data => GoalsController.defaultResponseOk(data))
       .catch(err => GoalsController.notFound(err));
   }
 
   create(goal) {
-    return this.Goal.create(goal)
+    return this.deserialize(goal)
+      .then(deserializedGoal => this.Goal.create(deserializedGoal))
       .then(record => ({
         status: 201,
-        data: GoalSerializer.serialize(record),
+        data: this.serialize(record),
       }))
       .catch(err => ({ data: err, status: 400 }));
   }

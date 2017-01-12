@@ -1,9 +1,13 @@
-import { Serializer } from 'jsonapi-serializer';
+import { Serializer, Deserializer } from 'jsonapi-serializer';
 
-export default new Serializer('goal', {
+const serializer = new Serializer('goal', {
   attributes: ['description', 'createdAt', 'updatedAt', 'tasks'],
   tasks: {
     ref: 'id',
     attributes: ['description', 'createdAt', 'updatedAt'],
   },
 });
+
+const deserializer = new Deserializer();
+
+export { serializer, deserializer };
