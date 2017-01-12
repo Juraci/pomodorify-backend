@@ -8,31 +8,11 @@ class GoalsController extends ApplicationController {
     this.Task = models.Task;
   }
 
-  static defaultResponseOk(data) {
-    return {
-      status: 200,
-      data,
-    };
-  }
-
-  static notFound(error) {
-    return {
-      status: 404,
-      data: {
-        errors: [
-          {
-            detail: error.message,
-          },
-        ],
-      },
-    };
-  }
-
   findAll() {
     return this.Goal.findAll({ include: [{ model: this.Task, as: 'tasks' }] })
       .then(goals => this.serialize(goals))
-      .then(data => GoalsController.defaultResponseOk(data))
-      .catch(err => GoalsController.notFound(err));
+      .then(data => ApplicationController.ok(data))
+      .catch(err => ApplicationController.jsonApiError(500, err));
   }
 
   findById(id) {
@@ -41,24 +21,22 @@ class GoalsController extends ApplicationController {
         if (!goal) { throw new Error('goal not found'); }
         return this.serialize(goal);
       })
-      .then(data => GoalsController.defaultResponseOk(data))
-      .catch(err => GoalsController.notFound(err));
+      .then(data => ApplicationController.ok(data))
+      .catch(err => GoalsController.jsonApiError(404, err));
   }
 
   create(goal) {
     return this.deserialize(goal)
       .then(deserializedGoal => this.Goal.create(deserializedGoal))
-      .then(record => ({
-        status: 201,
-        data: this.serialize(record),
-      }))
-      .catch(err => ({ data: err, status: 400 }));
+      .then(record => this.serialize(record))
+      .then(serializedGoal => ApplicationController.created(serializedGoal))
+      .catch(err => ApplicationController.jsonApiError(400, err));
   }
 
   deleteById(id) {
     return this.Goal.destroy({ where: { id: parseInt(id, 10) } })
-      .then(() => ({ status: 204 }))
-      .catch(err => ({ data: err, status: 400 }));
+      .then(() => ApplicationController.noContent())
+      .catch(err => ApplicationController.jsonApiError(500, err));
   }
 }
 

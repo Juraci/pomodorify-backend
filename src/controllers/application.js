@@ -11,6 +11,38 @@ class ApplicationController {
   deserialize(data) {
     return this.deserializer.deserialize(data);
   }
+
+  static defaultResponse(status, data) {
+    return {
+      status,
+      data,
+    };
+  }
+
+  static ok(data) {
+    return ApplicationController.defaultResponse(200, data);
+  }
+
+  static created(data) {
+    return ApplicationController.defaultResponse(201, data);
+  }
+
+  static noContent() {
+    return { status: 204 };
+  }
+
+  static jsonApiError(status, error) {
+    return {
+      status,
+      data: {
+        errors: [
+          {
+            detail: error.message,
+          },
+        ],
+      },
+    };
+  }
 }
 
 export default ApplicationController;
