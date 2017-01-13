@@ -1,9 +1,6 @@
 services:
   - postgresql
 
-addons:
-  postgresql: "9.6"
-
 before_script:
   - sudo psql -c 'create database pomodorify;' -U postgres
 
