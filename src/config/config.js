@@ -1,9 +1,9 @@
 export default {
-  database: 'pomodorify',
-  username: process.env.POSTGRES_USER || 'postgres',
-  password: process.env.POSTGRES_PASS || 'postgres',
+  database: 'postgres',
+  username: process.env.PG_USER || 'postgres',
+  password: process.env.PG_PASSWORD || 'postgres',
   params: {
-    host: process.env.DATABASE_URL || 'localhost',
+    host: process.env.DB_HOST || 'localhost',
     dialect: 'postgres',
     pool: {
       max: 5,
