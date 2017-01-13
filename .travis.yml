@@ -1,0 +1,12 @@
+services:
+  - postgresql
+
+addons:
+  postgresql: "9.6"
+
+before_script:
+  - psql -c 'create database pomodorify;' -U postgres
+
+language: node_js
+node_js:
+  - "6"
