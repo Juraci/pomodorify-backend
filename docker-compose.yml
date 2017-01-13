@@ -5,6 +5,7 @@ services:
       context: .
     environment:
       NODE_ENV: development
+      DB_HOST: db
     depends_on:
       - db
     ports:

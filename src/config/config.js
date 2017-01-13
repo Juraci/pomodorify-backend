@@ -6,7 +6,7 @@ export default {
     host: process.env.DB_HOST || 'localhost',
     dialect: 'postgres',
     dialectOptions: {
-      ssl: !(process.env.NODE_ENV === 'test'),
+      ssl: !(process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'development'),
     },
     pool: {
       max: 5,

@@ -10,3 +10,4 @@ node_js:
 
 env:
   - NODE_ENV=test
+  - DB_HOST=localhost
