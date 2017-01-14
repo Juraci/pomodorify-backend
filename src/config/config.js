@@ -16,7 +16,7 @@ export default {
     logging: false,
   },
   corsOptions: {
-    origin: 'http://localhost:4200',
+    origin: process.env.NODE_ENV === 'production' ? 'http://pomodorify.s3-website-sa-east-1.amazonaws.com' : 'http://localhost:4200',
     methods: ['GET', 'PUT', 'POST', 'DELETE', 'PATCH'],
   },
 };
