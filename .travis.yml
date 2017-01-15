@@ -9,5 +9,4 @@ node_js:
   - "6"
 
 env:
-  - NODE_ENV=test
-  - DB_HOST=localhost
+  - NODE_ENV=test DB_HOST=localhost
