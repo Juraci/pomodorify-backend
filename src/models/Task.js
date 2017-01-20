@@ -7,6 +7,11 @@ export default (sequelize, DataType) => {
         notEmpty: true,
       },
     },
+    pomodoros: {
+      type: DataType.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
   },
     {
       classMethods: {

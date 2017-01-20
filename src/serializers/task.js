@@ -1,7 +1,7 @@
 import { Serializer, Deserializer } from 'jsonapi-serializer';
 
 const serializer = new Serializer('tasks', {
-  attributes: ['description', 'createdAt', 'updatedAt'],
+  attributes: ['description', 'pomodoros', 'createdAt', 'updatedAt'],
 });
 
 const deserializer = new Deserializer({

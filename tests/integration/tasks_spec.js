@@ -30,6 +30,10 @@ describe('tasks', () => {
           .end((err, res) => {
             expect(res.status).to.equal(201);
             expect(res.body.data.type).to.be.equal('tasks');
+            const attrs = res.body.data.attributes;
+            expect(attrs).to.have.all.keys('created-at', 'updated-at', 'description', 'pomodoros');
+            expect(attrs.description).to.be.equal(task.data.attributes.description);
+            expect(attrs.pomodoros).to.be.equal(0);
             done(err);
           });
       });
