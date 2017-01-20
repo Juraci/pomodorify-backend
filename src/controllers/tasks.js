@@ -1,7 +1,7 @@
 import ApplicationController from './application';
 import { serializer, deserializer } from '../serializers/task';
 
-export default class TasksController extends ApplicationController {
+class TasksController extends ApplicationController {
   constructor(Task) {
     super({ serializer, deserializer });
     this.Task = Task;
@@ -43,4 +43,16 @@ export default class TasksController extends ApplicationController {
       .then(serializedRecord => ApplicationController.created(serializedRecord))
       .catch(err => ApplicationController.jsonApiError(400, err));
   }
+
+  updateById(id, task) {
+    return this.deserialize(task)
+      .then(dsTask => this.Task.update(dsTask, { where: { id: parseInt(id, 10) } }))
+      .then((result) => {
+        if (result[0] !== 1) { throw new Error('task not found'); }
+        return ApplicationController.noContent();
+      })
+      .catch(err => ApplicationController.jsonApiError(404, err));
+  }
 }
+
+export default TasksController;

@@ -63,9 +63,12 @@ describe('goals', () => {
             expect(record.relationships.tasks.data).to.have.length(1);
             expect(record.relationships.tasks.data[0].id).to.be.equal(`${task.id}`);
             expect(res.body).to.have.property('included');
-            expect(res.body.included[0].type).to.be.equal('tasks');
-            expect(res.body.included[0].id).to.be.equal(`${task.id}`);
-            expect(res.body.included[0].attributes.description).to.be.equal(task.description);
+            const includedTask = res.body.included[0];
+            expect(includedTask.attributes).to.have.all.keys('created-at', 'updated-at', 'description', 'pomodoros');
+            expect(includedTask.type).to.be.equal('tasks');
+            expect(includedTask.id).to.be.equal(`${task.id}`);
+            expect(includedTask.attributes.description).to.be.equal(task.description);
+            expect(includedTask.attributes.pomodoros).to.be.equal(task.pomodoros);
             done(err);
           });
       });

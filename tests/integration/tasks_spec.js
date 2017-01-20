@@ -146,4 +146,55 @@ describe('tasks', () => {
       });
     });
   });
+
+  describe('PATCH /tasks/:id', () => {
+    let task;
+    const updatedTask = {
+      data: {
+        type: 'tasks',
+        attributes: {
+          pomodoros: 1,
+        },
+      },
+    };
+
+    beforeEach((done) => {
+      app.datasource.sequelize.sync()
+        .then(() => {
+          Task.create({ description: 'Read the first chapter of Rock and Roll with Ember.js' })
+            .then((newTask) => {
+              task = newTask;
+              done();
+            });
+        });
+    });
+
+    it('updates the task', (done) => {
+      request
+        .patch(`/tasks/${task.id}`)
+        .send(updatedTask)
+        .end((err, res) => {
+          expect(res.status).to.equal(204);
+          Task.find({ where: { id: task.id } })
+            .then((record) => {
+              expect(record.pomodoros).to.be.equal(updatedTask.data.attributes.pomodoros);
+              done(err);
+            });
+        });
+    });
+
+    context('when trying to update a task that does not exist', () => {
+      it('returns 404 json api compliant error', (done) => {
+        request
+          .patch('/tasks/666')
+          .send(updatedTask)
+          .end((err, res) => {
+            expect(res.status).to.equal(404);
+            expect(res.body.errors).to.have.length(1);
+            expect(res.body.errors[0].detail).to.be.equal('task not found');
+            done(err);
+          });
+      });
+    });
+  });
 });

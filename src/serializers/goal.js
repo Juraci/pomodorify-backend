@@ -4,7 +4,7 @@ const serializer = new Serializer('goal', {
   attributes: ['description', 'createdAt', 'updatedAt', 'tasks'],
   tasks: {
     ref: 'id',
-    attributes: ['description', 'createdAt', 'updatedAt'],
+    attributes: ['description', 'pomodoros', 'createdAt', 'updatedAt'],
   },
 });
 
