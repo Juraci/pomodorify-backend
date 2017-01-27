@@ -1,3 +1,5 @@
+import HttpStatus from 'http-status-codes';
+
 class ApplicationController {
   constructor({ serializer, deserializer }) {
     this.serializer = serializer;
@@ -20,15 +22,15 @@ class ApplicationController {
   }
 
   static ok(data) {
-    return ApplicationController.defaultResponse(200, data);
+    return ApplicationController.defaultResponse(HttpStatus.OK, data);
   }
 
   static created(data) {
-    return ApplicationController.defaultResponse(201, data);
+    return ApplicationController.defaultResponse(HttpStatus.CREATED, data);
   }
 
   static noContent() {
-    return ApplicationController.defaultResponse(204, { data: 'No content' });
+    return ApplicationController.defaultResponse(HttpStatus.NO_CONTENT, { data: 'No content' });
   }
 
   static jsonApiError(status, error) {
