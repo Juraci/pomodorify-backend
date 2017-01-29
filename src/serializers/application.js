@@ -13,14 +13,7 @@ class ApplicationSerializer {
 
     this.relationships.forEach((r) => {
       attributes.push(r.type);
-      relationCollection.push({
-        name: r.type,
-        config: {
-          ref: 'id',
-          included,
-          attributes: r.attributes,
-        },
-      });
+      relationCollection.push(ApplicationSerializer.buildRelationshipConfig(r, included));
     });
 
     const params = {
@@ -32,6 +25,17 @@ class ApplicationSerializer {
     });
 
     return new Serializer(this.type, params);
+  }
+
+  static buildRelationshipConfig(relationship, included) {
+    return {
+      name: relationship.type,
+      config: {
+        ref: 'id',
+        included,
+        attributes: relationship.attributes,
+      },
+    };
   }
 
   static buildDeserializer(params = {}) {
