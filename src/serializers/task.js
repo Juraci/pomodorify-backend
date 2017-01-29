@@ -1,13 +1,20 @@
-import { Serializer, Deserializer } from 'jsonapi-serializer';
+import ApplicationSerializer from './application';
 
-const serializer = new Serializer('tasks', {
-  attributes: ['description', 'pomodoros', 'createdAt', 'updatedAt'],
-});
+class TaskSerializer extends ApplicationSerializer {
+  constructor() {
+    super({
+      type: 'tasks',
+      attributes: ['description', 'pomodoros', 'createdAt', 'updatedAt'],
+    });
+  }
 
-const deserializer = new Deserializer({
-  goals: {
-    valueForRelationship: relationship => ({ id: relationship.id }),
-  },
-});
+  static buildDeserializer() {
+    return ApplicationSerializer.buildDeserializer({
+      goals: {
+        valueForRelationship: relationship => ({ id: relationship.id }),
+      },
+    });
+  }
+}
 
-export { serializer, deserializer };
+export default TaskSerializer;

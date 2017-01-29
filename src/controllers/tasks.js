@@ -1,9 +1,15 @@
 import ApplicationController from './application';
-import { serializer, deserializer } from '../serializers/task';
+import TaskSerializer from '../serializers/task';
 
 class TasksController extends ApplicationController {
   constructor(Task) {
-    super({ serializer, deserializer });
+    const taskSerializer = new TaskSerializer();
+
+    super({
+      serializer: taskSerializer.buildSerializer(),
+      deserializer: TaskSerializer.buildDeserializer(),
+    });
+
     this.Task = Task;
   }
 

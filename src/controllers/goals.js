@@ -1,9 +1,15 @@
 import ApplicationController from './application';
-import { serializer, deserializer } from '../serializers/goal';
+import GoalSerializer from '../serializers/goal';
 
 class GoalsController extends ApplicationController {
   constructor(models) {
-    super({ serializer, deserializer });
+    const goalSerializer = new GoalSerializer();
+
+    super({
+      serializer: goalSerializer.buildSerializer(true),
+      deserializer: GoalSerializer.buildDeserializer(),
+    });
+
     this.Goal = models.Goal;
     this.Task = models.Task;
   }
