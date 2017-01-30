@@ -30,6 +30,16 @@ class UsersController extends ApplicationController {
       .then(data => UsersController.ok(data))
       .catch(err => UsersController.notFound(err));
   }
+
+  updateById(id, user) {
+    return this.deserialize(user)
+      .then(dsUser => this.User.update(dsUser, { where: { id: parseInt(id, 10) } }))
+      .then((result) => {
+        if (result[0] !== 1) { throw new Error('user not found'); }
+        return UsersController.noContent();
+      })
+      .catch(err => UsersController.notFound(err));
+  }
 }
 
 export default UsersController;

@@ -78,4 +78,57 @@ describe('users', () => {
       });
     });
   });
+
+  describe('PATCH /users/:id', () => {
+    let user;
+    const updatedUser = {
+      data: {
+        type: 'users',
+        attributes: {
+          email: 'another@email.com',
+        },
+      },
+    };
+
+    beforeEach((done) => {
+      app.datasource.sequelize.sync()
+        .then(() => {
+          User
+            .create({ email: 'user@example.com', password: 'somepass123' })
+            .then((newuser) => {
+              user = newuser;
+              done();
+            });
+        });
+    });
+
+    it('updates the user properties', (done) => {
+      request
+        .patch(`/users/${user.id}`)
+        .send(updatedUser)
+        .end((err, res) => {
+          expect(res.status).to.equal(204);
+          User
+            .find({ where: { id: user.id } })
+            .then((record) => {
+              expect(record.email).to.be.equal(updatedUser.data.attributes.email);
+              done(err);
+            });
+        });
+    });
+
+    context('when trying to update a user that does not exist', () => {
+      it('returns 404 json api compliant error', (done) => {
+        request
+          .patch('/users/666')
+          .send(updatedUser)
+          .end((err, res) => {
+            expect(res.status).to.equal(404);
+            expect(res.body.errors).to.have.length(1);
+            expect(res.body.errors[0].detail).to.be.equal('user not found');
+            done(err);
+          });
+      });
+    });
+  });
 });
