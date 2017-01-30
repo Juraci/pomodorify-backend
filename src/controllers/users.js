@@ -22,7 +22,7 @@ class UsersController extends ApplicationController {
   }
 
   findById(id) {
-    return this.User.find({ where: { id: parseInt(id, 10) }, include: [{ model: this.Goal, as: 'goals' }]})
+    return this.User.find({ where: { id: parseInt(id, 10) }, include: [{ model: this.Goal, as: 'goals' }] })
       .then((user) => {
         if (!user) { throw new Error('user not found'); }
         return this.serialize(user);
