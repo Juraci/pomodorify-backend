@@ -15,13 +15,13 @@ export default (sequelize, DataType) => {
       },
     },
   },
-    /*{
+    {
       classMethods: {
         associate: (models) => {
           User.hasMany(models.Goal, { as: 'goals' });
         },
       },
-    },*/
+    },
   );
 
   return User;

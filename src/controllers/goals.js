@@ -14,6 +14,17 @@ class GoalsController extends ApplicationController {
     this.Task = models.Task;
   }
 
+  static mountGoalObject(data) {
+    let obj;
+    if (Object.prototype.hasOwnProperty.call(data, 'user')) {
+      obj = { description: data.description, userId: data.user.id };
+    } else {
+      obj = { description: data.description };
+    }
+
+    return obj;
+  }
+
   findAll() {
     return this.Goal.findAll({ include: [{ model: this.Task, as: 'tasks' }] })
       .then(goals => this.serialize(goals))
@@ -33,7 +44,8 @@ class GoalsController extends ApplicationController {
 
   create(goal) {
     return this.deserialize(goal)
-      .then(deserializedGoal => this.Goal.create(deserializedGoal))
+      .then(deserializedGoal => GoalsController.mountGoalObject(deserializedGoal))
+      .then(goalObject => this.Goal.create(goalObject))
       .then(record => this.serialize(record))
       .then(serializedGoal => GoalsController.created(serializedGoal))
       .catch(err => GoalsController.jsonApiError(400, err));

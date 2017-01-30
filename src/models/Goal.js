@@ -11,6 +11,7 @@ export default (sequelize, DataType) => {
     {
       classMethods: {
         associate: (models) => {
+          Goal.belongsTo(models.User);
           Goal.hasMany(models.Task, { as: 'tasks' });
         },
       },
