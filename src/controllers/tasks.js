@@ -27,8 +27,8 @@ class TasksController extends ApplicationController {
   findAll() {
     return this.Task.findAll()
       .then(tasks => this.serialize(tasks))
-      .then(serializedTasks => ApplicationController.ok(serializedTasks))
-      .catch(err => ApplicationController.jsonApiError(500, err));
+      .then(serializedTasks => TasksController.ok(serializedTasks))
+      .catch(err => TasksController.jsonApiError(500, err));
   }
 
   findById(id) {
@@ -37,8 +37,8 @@ class TasksController extends ApplicationController {
         if (!task) { throw new Error('task not found'); }
         return this.serialize(task);
       })
-      .then(data => ApplicationController.ok(data))
-      .catch(err => ApplicationController.jsonApiError(404, err));
+      .then(data => TasksController.ok(data))
+      .catch(err => TasksController.notFound(err));
   }
 
   create(task) {
@@ -46,8 +46,8 @@ class TasksController extends ApplicationController {
       .then(deserializedTask => TasksController.mountTaskObject(deserializedTask))
       .then(taskObject => this.Task.create(taskObject))
       .then(record => this.serialize(record))
-      .then(serializedRecord => ApplicationController.created(serializedRecord))
-      .catch(err => ApplicationController.jsonApiError(400, err));
+      .then(serializedRecord => TasksController.created(serializedRecord))
+      .catch(err => TasksController.jsonApiError(400, err));
   }
 
   updateById(id, task) {
@@ -55,9 +55,9 @@ class TasksController extends ApplicationController {
       .then(dsTask => this.Task.update(dsTask, { where: { id: parseInt(id, 10) } }))
       .then((result) => {
         if (result[0] !== 1) { throw new Error('task not found'); }
-        return ApplicationController.noContent();
+        return TasksController.noContent();
       })
-      .catch(err => ApplicationController.jsonApiError(404, err));
+      .catch(err => TasksController.notFound(err));
   }
 }
 

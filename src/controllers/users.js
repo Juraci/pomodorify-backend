@@ -16,8 +16,8 @@ class UsersController extends ApplicationController {
   findAll() {
     return this.User.findAll()
       .then(users => this.serialize(users))
-      .then(data => ApplicationController.ok(data))
-      .catch(err => ApplicationController.jsonApiError(500, err));
+      .then(data => UsersController.ok(data))
+      .catch(err => UsersController.jsonApiError(500, err));
   }
 
   findById(id) {
@@ -26,8 +26,8 @@ class UsersController extends ApplicationController {
         if (!user) { throw new Error('user not found'); }
         return this.serialize(user);
       })
-      .then(data => ApplicationController.ok(data))
-      .catch(err => UsersController.jsonApiError(404, err));
+      .then(data => UsersController.ok(data))
+      .catch(err => UsersController.notFound(err));
   }
 }
 

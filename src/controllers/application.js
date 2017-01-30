@@ -45,6 +45,10 @@ class ApplicationController {
       },
     };
   }
+
+  static notFound(err) {
+    return ApplicationController.jsonApiError(HttpStatus.NOT_FOUND, err);
+  }
 }
 
 export default ApplicationController;
