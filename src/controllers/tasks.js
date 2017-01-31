@@ -28,7 +28,7 @@ class TasksController extends ApplicationController {
     return this.Task.findAll()
       .then(tasks => this.serialize(tasks))
       .then(serializedTasks => TasksController.ok(serializedTasks))
-      .catch(err => TasksController.jsonApiError(500, err));
+      .catch(err => TasksController.unprocessableEntity(err));
   }
 
   findById(id) {

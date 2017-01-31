@@ -49,6 +49,10 @@ class ApplicationController {
   static notFound(err) {
     return ApplicationController.jsonApiError(HttpStatus.NOT_FOUND, err);
   }
+
+  static unprocessableEntity(err) {
+    return ApplicationController.jsonApiError(HttpStatus.UNPROCESSABLE_ENTITY, err);
+  }
 }
 
 export default ApplicationController;

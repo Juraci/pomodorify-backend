@@ -29,7 +29,7 @@ class GoalsController extends ApplicationController {
     return this.Goal.findAll({ include: [{ model: this.Task, as: 'tasks' }] })
       .then(goals => this.serialize(goals))
       .then(data => GoalsController.ok(data))
-      .catch(err => GoalsController.jsonApiError(500, err));
+      .catch(err => GoalsController.unprocessableEntity(err));
   }
 
   findById(id) {
