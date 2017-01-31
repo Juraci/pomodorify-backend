@@ -1,11 +1,14 @@
 describe('goals', () => {
-  const Goal = app.datasource.models.Goal;
   const Task = app.datasource.models.Task;
+  const Goal = app.datasource.models.Goal;
+  const User = app.datasource.models.User;
 
   beforeEach((done) => {
     app.datasource.sequelize.sync().then(() => {
       Goal
         .destroy({ where: {} })
+        .then(() => User.destroy({ where: {} }))
+        .then(() => Task.destroy({ where: {} }))
         .then(() => {
           done();
         });
@@ -65,11 +68,31 @@ describe('goals', () => {
             expect(res.body).to.have.property('included');
             const includedTask = res.body.included[0];
             expect(includedTask.attributes).to.have.all.keys('created-at', 'updated-at', 'description', 'pomodoros');
-            expect(includedTask.type).to.be.equal('tasks');
-            expect(includedTask.id).to.be.equal(`${task.id}`);
-            expect(includedTask.attributes.description).to.be.equal(task.description);
-            expect(includedTask.attributes.pomodoros).to.be.equal(task.pomodoros);
             done(err);
+          });
+      });
+    });
+
+    context('when filtering goals', () => {
+      let user;
+
+      beforeEach((done) => {
+        User.create({ email: 'sample@example.com', password: 'abcd1234' })
+          .then((newUser) => {
+            user = newUser;
+            return Goal.create({ description: 'some stuff', userId: newUser.id });
+          })
+          .then(() => done())
+          .catch(err => done(err));
+      });
+
+      it('returns the goal when filtering by user id', (done) => {
+        request
+          .get(`/goals?filter[userId]=${user.id}`)
+          .end((err, res) => {
+            expect(res.status).to.equal(200);
+            expect(res.body.data).to.have.length(1);
+            done();
           });
       });
     });
@@ -144,26 +167,75 @@ describe('goals', () => {
   });
 
   describe('POST /goals', () => {
-    const goal = {
-      data: {
-        type: 'goals',
-        attributes: {
-          description: 'Feel comfortable with CSS',
+    context('when posting GOAL without relationship', () => {
+      const goal = {
+        data: {
+          type: 'goals',
+          attributes: {
+            description: 'Feel comfortable with CSS',
+          },
         },
-      },
-    };
+      };
 
-    it('creates a new goal', (done) => {
-      request
-        .post('/goals')
-        .send(goal)
-        .end((err, res) => {
-          expect(res.status).to.equal(201);
-          expect(res.body.data.type).to.be.equal('goals');
-          expect(res.body.data.attributes.description).to.be.equal('Feel comfortable with CSS');
-          expect(res.body.data.attributes).to.have.all.keys('created-at', 'updated-at', 'description');
-          done(err);
-        });
+      it('creates a new goal', (done) => {
+        request
+          .post('/goals')
+          .send(goal)
+          .end((err, res) => {
+            expect(res.status).to.equal(201);
+            expect(res.body.data.type).to.be.equal('goals');
+            expect(res.body.data.attributes.description).to.be.equal('Feel comfortable with CSS');
+            expect(res.body.data.attributes).to.have.all.keys('created-at', 'updated-at', 'description');
+            done(err);
+          });
+      });
+    });
+
+    context('when posting with relationship', () => {
+      let user;
+
+      beforeEach((done) => {
+        app.datasource.sequelize.sync()
+          .then(() => {
+            User.create({ email: 'email@sample.com', password: '1234' })
+              .then((newUser) => {
+                user = newUser;
+                done();
+              });
+          });
+      });
+
+      it('creates the goal related to a user', (done) => {
+        const goal = {
+          data: {
+            type: 'goals',
+            attributes: {
+              description: 'Feel comfortable with CSS',
+            },
+            relationships: {
+              user: {
+                data: {
+                  type: 'users',
+                  id: `${user.id}`,
+                },
+              },
+            },
+          },
+        };
+
+        request
+          .post('/goals')
+          .send(goal)
+          .end((err, res) => {
+            expect(res.status).to.equal(201);
+            expect(res.body.data.type).to.be.equal('goals');
+            Goal.find({ where: { id: res.body.data.id } })
+              .then((record) => {
+                expect(record.userId).to.be.equal(user.id);
+                done(err);
+              });
+          });
+      });
     });
   });
 

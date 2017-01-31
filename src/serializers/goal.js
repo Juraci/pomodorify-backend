@@ -9,6 +9,14 @@ class GoalSerializer extends ApplicationSerializer {
       relationships: [new TaskSerializer()],
     });
   }
+
+  static buildDeserializer() {
+    return ApplicationSerializer.buildDeserializer({
+      users: {
+        valueForRelationship: relationship => ({ id: relationship.id }),
+      },
+    });
+  }
 }
 
 export default GoalSerializer;

@@ -1,34 +1,34 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import GoalsController from '../controllers/goals';
+import UsersController from '../controllers/users';
 
 const router = express.Router();
 const jsonParser = bodyParser.json();
 
 export default (datasource) => {
-  const goalsController = new GoalsController(datasource.models);
+  const usersController = new UsersController(datasource.models);
 
   router.route('/')
     .get((req, res) => {
-      goalsController.findAll(req.query)
+      usersController.findAll(req.query)
         .then(result => res.status(result.status).json(result.data));
     })
     .post(jsonParser, (req, res) => {
-      goalsController.create(req.body)
+      usersController.create(req.body)
         .then(result => res.status(result.status).json(result.data));
     });
 
   router.route('/:id')
     .get((req, res) => {
-      goalsController.findById(req.params.id)
+      usersController.findById(req.params.id)
         .then(result => res.status(result.status).json(result.data));
     })
     .delete((req, res) => {
-      goalsController.deleteById(req.params.id)
+      usersController.deleteById(req.params.id)
         .then(result => res.status(result.status).json(result.data));
     })
     .patch(jsonParser, (req, res) => {
-      goalsController.updateById(req.params.id, req.body)
+      usersController.updateById(req.params.id, req.body)
         .then(result => res.status(result.status).json(result.data));
     });
 

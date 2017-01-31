@@ -1,6 +1,13 @@
 export default (sequelize, DataType) => {
-  const Goal = sequelize.define('goal', {
-    description: {
+  const User = sequelize.define('user', {
+    email: {
+      type: DataType.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
+    password: {
       type: DataType.STRING,
       allowNull: false,
       validate: {
@@ -11,12 +18,11 @@ export default (sequelize, DataType) => {
     {
       classMethods: {
         associate: (models) => {
-          Goal.belongsTo(models.User);
-          Goal.hasMany(models.Task, { as: 'tasks' });
+          User.hasMany(models.Goal, { as: 'goals' });
         },
       },
     },
   );
 
-  return Goal;
+  return User;
 };
