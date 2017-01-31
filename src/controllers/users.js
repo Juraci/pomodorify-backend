@@ -14,8 +14,8 @@ class UsersController extends ApplicationController {
     this.User = models.User;
   }
 
-  findAll() {
-    return this.User.findAll({ include: [{ model: this.Goal, as: 'goals' }] })
+  findAll(query) {
+    return this.User.findAll({ where: query.filter, include: [{ model: this.Goal, as: 'goals' }] })
       .then(users => this.serialize(users))
       .then(data => UsersController.ok(data))
       .catch(err => UsersController.jsonApiError(500, err));

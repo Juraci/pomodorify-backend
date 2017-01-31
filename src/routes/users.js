@@ -10,7 +10,7 @@ export default (datasource) => {
 
   router.route('/')
     .get((req, res) => {
-      usersController.findAll()
+      usersController.findAll(req.query)
         .then(result => res.status(result.status).json(result.data));
     })
     .post(jsonParser, (req, res) => {

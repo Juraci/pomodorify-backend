@@ -17,6 +17,7 @@ describe('users', () => {
         .then(() => {
           User
             .create({ email: 'user@example.com', password: 'somePass123' })
+            .then(() => User.create({ email: 'user2@example.com', password: 'somePass123' }))
             .then(() => {
               done();
             });
@@ -28,14 +29,27 @@ describe('users', () => {
         .get('/users')
         .end((err, res) => {
           expect(res.status).to.equal(200);
-          expect(res.body.data).to.have.length(1);
+          expect(res.body.data).to.have.length(2);
           const record = res.body.data[0];
           expect(record).to.have.any.keys('id');
           expect(record.type).to.be.equal('users');
-          expect(record.attributes.email).to.be.equal('user@example.com');
           expect(record.attributes).to.have.all.keys('created-at', 'updated-at', 'email', 'password');
           done(err);
         });
+    });
+
+    context('when filtering users by email', () => {
+      it('returns the user with the given email', (done) => {
+        request
+          .get('/users?filter[email]=user@example.com')
+          .end((err, res) => {
+            expect(res.status).to.equal(200);
+            expect(res.body.data).to.have.length(1);
+            const record = res.body.data[0];
+            expect(record.attributes.email).to.be.equal('user@example.com');
+            done(err);
+          });
+      });
     });
   });
 
