@@ -68,11 +68,31 @@ describe('goals', () => {
             expect(res.body).to.have.property('included');
             const includedTask = res.body.included[0];
             expect(includedTask.attributes).to.have.all.keys('created-at', 'updated-at', 'description', 'pomodoros');
-            expect(includedTask.type).to.be.equal('tasks');
-            expect(includedTask.id).to.be.equal(`${task.id}`);
-            expect(includedTask.attributes.description).to.be.equal(task.description);
-            expect(includedTask.attributes.pomodoros).to.be.equal(task.pomodoros);
             done(err);
+          });
+      });
+    });
+
+    context('when filtering goals', () => {
+      let user;
+
+      beforeEach((done) => {
+        User.create({ email: 'sample@example.com', password: 'abcd1234' })
+          .then((newUser) => {
+            user = newUser;
+            return Goal.create({ description: 'some stuff', userId: newUser.id });
+          })
+          .then(() => done())
+          .catch(err => done(err));
+      });
+
+      it('returns the goal when filtering by user id', (done) => {
+        request
+          .get(`/goals?filter[userId]=${user.id}`)
+          .end((err, res) => {
+            expect(res.status).to.equal(200);
+            expect(res.body.data).to.have.length(1);
+            done();
           });
       });
     });

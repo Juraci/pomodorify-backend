@@ -25,8 +25,8 @@ class GoalsController extends ApplicationController {
     return obj;
   }
 
-  findAll() {
-    return this.Goal.findAll({ include: [{ model: this.Task, as: 'tasks' }] })
+  findAll(query) {
+    return this.Goal.findAll({ where: query.filter, include: [{ model: this.Task, as: 'tasks' }] })
       .then(goals => this.serialize(goals))
       .then(data => GoalsController.ok(data))
       .catch(err => GoalsController.unprocessableEntity(err));
