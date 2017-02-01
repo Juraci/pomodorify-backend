@@ -3,13 +3,7 @@ describe('tasks', () => {
   const Goal = app.datasource.models.Goal;
 
   beforeEach((done) => {
-    app.datasource.sequelize.sync().then(() => {
-      Task
-        .destroy({ where: {} })
-        .then(() => {
-          done();
-        });
-    });
+    destroyAll(done);
   });
 
   describe('POST /tasks', () => {

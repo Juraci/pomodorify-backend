@@ -4,15 +4,7 @@ describe('goals', () => {
   const User = app.datasource.models.User;
 
   beforeEach((done) => {
-    app.datasource.sequelize.sync().then(() => {
-      Goal
-        .destroy({ where: {} })
-        .then(() => User.destroy({ where: {} }))
-        .then(() => Task.destroy({ where: {} }))
-        .then(() => {
-          done();
-        });
-    });
+    destroyAll(done);
   });
 
   describe('GET /goals', () => {

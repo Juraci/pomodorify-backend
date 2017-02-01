@@ -2,13 +2,7 @@ describe('users', () => {
   const User = app.datasource.models.User;
 
   beforeEach((done) => {
-    app.datasource.sequelize.sync().then(() => {
-      User
-        .destroy({ where: {} })
-        .then(() => {
-          done();
-        });
-    });
+    destroyAll(done);
   });
 
   describe('GET /users', () => {
