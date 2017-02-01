@@ -2,3 +2,4 @@ node_modules/
 build/
 migrations/
 config/
+scripts/seeds/addUser.js
