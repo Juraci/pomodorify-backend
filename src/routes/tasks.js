@@ -1,11 +1,9 @@
 import express from 'express';
-import bodyParser from 'body-parser';
 import TasksController from '../controllers/tasks';
 
 const router = express.Router();
-const jsonParser = bodyParser.json();
 
-export default (datasource) => {
+export default ({ datasource, jsonParser }) => {
   const Task = datasource.models.Task;
   const tasksController = new TasksController(Task);
 

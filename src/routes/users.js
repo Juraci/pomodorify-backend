@@ -1,11 +1,9 @@
 import express from 'express';
-import bodyParser from 'body-parser';
 import UsersController from '../controllers/users';
 
 const router = express.Router();
-const jsonParser = bodyParser.json();
 
-export default (datasource) => {
+export default ({ datasource, jsonParser }) => {
   const usersController = new UsersController(datasource.models);
 
   router.route('/')
