@@ -33,10 +33,8 @@ class TasksController extends ApplicationController {
 
   findById(id) {
     return this.Task.find({ where: { id: parseInt(id, 10) } })
-      .then((task) => {
-        if (!task) { throw new Error('task not found'); }
-        return this.serialize(task);
-      })
+      .then(task => TasksController.throwIfNotFound(task, 'task'))
+      .then(task => this.serialize(task))
       .then(data => TasksController.ok(data))
       .catch(err => TasksController.notFound(err));
   }
@@ -53,10 +51,8 @@ class TasksController extends ApplicationController {
   updateById(id, task) {
     return this.deserialize(task)
       .then(dsTask => this.Task.update(dsTask, { where: { id: parseInt(id, 10) } }))
-      .then((result) => {
-        if (result[0] !== 1) { throw new Error('task not found'); }
-        return TasksController.noContent();
-      })
+      .then(result => TasksController.throwIfNotUpdated(result, 'task'))
+      .then(() => TasksController.noContent())
       .catch(err => TasksController.notFound(err));
   }
 }

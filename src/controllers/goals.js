@@ -34,10 +34,8 @@ class GoalsController extends ApplicationController {
 
   findById(id) {
     return this.Goal.find({ where: { id: parseInt(id, 10) }, include: [{ model: this.Task, as: 'tasks' }] })
-      .then((goal) => {
-        if (!goal) { throw new Error('goal not found'); }
-        return this.serialize(goal);
-      })
+      .then(goal => GoalsController.throwIfNotFound(goal, 'goal'))
+      .then(goal => this.serialize(goal))
       .then(data => GoalsController.ok(data))
       .catch(err => GoalsController.notFound(err));
   }
@@ -63,10 +61,8 @@ class GoalsController extends ApplicationController {
   updateById(id, goal) {
     return this.deserialize(goal)
       .then(dsGoal => this.Goal.update(dsGoal, { where: { id: parseInt(id, 10) } }))
-      .then((result) => {
-        if (result[0] !== 1) { throw new Error('goal not found'); }
-        return GoalsController.noContent();
-      })
+      .then(result => GoalsController.throwIfNotUpdated(result, 'goal'))
+      .then(() => GoalsController.noContent())
       .catch(err => GoalsController.notFound(err));
   }
 }

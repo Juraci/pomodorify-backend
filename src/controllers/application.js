@@ -53,6 +53,15 @@ class ApplicationController {
   static unprocessableEntity(err) {
     return ApplicationController.jsonApiError(HttpStatus.UNPROCESSABLE_ENTITY, err);
   }
+
+  static throwIfNotFound(resource, resourceType) {
+    if (!resource) { throw new Error(`${resourceType} not found`); }
+    return resource;
+  }
+
+  static throwIfNotUpdated(result, resourceType) {
+    if (result[0] !== 1) { throw new Error(`${resourceType} not found`); }
+  }
 }
 
 export default ApplicationController;
