@@ -26,14 +26,24 @@ class GoalsController extends ApplicationController {
   }
 
   findAll(query) {
-    return this.Goal.findAll({ where: query.filter, include: [{ model: this.Task, as: 'tasks' }] })
+    return this.Goal.findAll({
+      where: query.filter,
+      include: [
+        { model: this.Task, as: 'tasks' },
+      ],
+    })
       .then(goals => this.serialize(goals))
       .then(data => GoalsController.ok(data))
       .catch(err => GoalsController.unprocessableEntity(err));
   }
 
   findById(id) {
-    return this.Goal.find({ where: { id: parseInt(id, 10) }, include: [{ model: this.Task, as: 'tasks' }] })
+    return this.Goal.find({
+      where: { id: parseInt(id, 10) },
+      include: [
+        { model: this.Task, as: 'tasks' },
+      ],
+    })
       .then(goal => GoalsController.throwIfNotFound(goal, 'goal'))
       .then(goal => this.serialize(goal))
       .then(data => GoalsController.ok(data))
