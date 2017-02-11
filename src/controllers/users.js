@@ -33,7 +33,7 @@ class UsersController extends ApplicationController {
         { model: this.Goal, as: 'goals' },
       ],
     })
-      .then(user => UsersController.throwIfNotFound(user))
+      .then(user => UsersController.throwIfNotFound(user, 'user'))
       .then(user => this.serialize(user))
       .then(data => UsersController.ok(data))
       .catch(err => UsersController.notFound(err));
@@ -42,7 +42,7 @@ class UsersController extends ApplicationController {
   updateById(id, user) {
     return this.deserialize(user)
       .then(dsUser => this.User.update(dsUser, { where: { id: parseInt(id, 10) } }))
-      .then(result => UsersController.throwIfNotUpdated(result))
+      .then(result => UsersController.throwIfNotUpdated(result, 'user'))
       .then(() => UsersController.noContent())
       .catch(err => UsersController.notFound(err));
   }
