@@ -6,18 +6,11 @@ engines:
       languages:
       - javascript
   eslint:
-    enabled: true
-    channel: "eslint-3"
-    config:
-      config: .eslintrc
-      extension:
-        - .es6
-        - .js
+    enabled: false
   fixme:
     enabled: true
 ratings:
   paths:
-  - "**.es6"
   - "**.js"
 exclude_paths:
 - tests/
