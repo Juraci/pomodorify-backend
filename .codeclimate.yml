@@ -8,11 +8,16 @@ engines:
   eslint:
     enabled: true
     channel: "eslint-3"
-    config: .eslintrc
+    config:
+      config: .eslintrc
+      extension:
+        - .es6
+        - .js
   fixme:
     enabled: true
 ratings:
   paths:
+  - "**.es6"
   - "**.js"
 exclude_paths:
 - tests/
