@@ -7,7 +7,7 @@ engines:
       - javascript
   eslint:
     enabled: true
-    config: ./.eslintrc
+    config: .eslintrc
   fixme:
     enabled: true
 ratings:
