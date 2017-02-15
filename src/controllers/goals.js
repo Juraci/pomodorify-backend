@@ -8,6 +8,8 @@ class GoalsController extends ApplicationController {
     super({
       serializer: goalSerializer.buildSerializer(true),
       deserializer: GoalSerializer.buildDeserializer(),
+      model: models.Goal,
+      relations: [{ model: models.Task, as: 'tasks' }],
     });
 
     this.Goal = models.Goal;
@@ -23,18 +25,6 @@ class GoalsController extends ApplicationController {
     }
 
     return obj;
-  }
-
-  findAll(query) {
-    return this.Goal.findAll({
-      where: query.filter,
-      include: [
-        { model: this.Task, as: 'tasks' },
-      ],
-    })
-      .then(goals => this.serialize(goals))
-      .then(data => GoalsController.ok(data))
-      .catch(err => GoalsController.unprocessableEntity(err));
   }
 
   findById(id) {

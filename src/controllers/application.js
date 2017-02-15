@@ -1,9 +1,11 @@
 import HttpStatus from 'http-status-codes';
 
 class ApplicationController {
-  constructor({ serializer, deserializer }) {
+  constructor({ serializer, deserializer, model, relations }) {
     this.serializer = serializer;
     this.deserializer = deserializer;
+    this.model = model;
+    this.relations = relations;
   }
 
   serialize(data) {
@@ -12,6 +14,16 @@ class ApplicationController {
 
   deserialize(data) {
     return this.deserializer.deserialize(data);
+  }
+
+  findAll(query) {
+    return this.model.findAll({
+      where: query.filter,
+      include: this.relations,
+    })
+      .then(records => this.serialize(records))
+      .then(data => ApplicationController.ok(data))
+      .catch(err => ApplicationController.unprocessableEntity(err));
   }
 
   static defaultResponse(status, data) {
