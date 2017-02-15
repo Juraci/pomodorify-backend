@@ -4,8 +4,8 @@ import TasksController from '../controllers/tasks';
 const router = express.Router();
 
 export default ({ datasource, jsonParser }) => {
-  const Task = datasource.models.Task;
-  const tasksController = new TasksController(Task);
+  const models = datasource.models;
+  const tasksController = new TasksController(models);
 
   router.route('/')
     .get((req, res) => {

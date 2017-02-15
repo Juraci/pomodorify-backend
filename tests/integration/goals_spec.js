@@ -121,7 +121,7 @@ describe('goals', () => {
           .end((err, res) => {
             expect(res.status).to.equal(404);
             expect(res.body.errors).to.have.length(1);
-            expect(res.body.errors[0].detail).to.be.equal('goal not found');
+            expect(res.body.errors[0].detail).to.be.equal('resource not found');
             done(err);
           });
       });
@@ -260,7 +260,7 @@ describe('goals', () => {
           .end((err, res) => {
             expect(res.status).to.equal(404);
             expect(res.body.errors).to.have.length(1);
-            expect(res.body.errors[0].detail).to.be.equal('goal not found');
+            expect(res.body.errors[0].detail).to.be.equal('resource not found');
             done(err);
           });
       });
@@ -311,7 +311,7 @@ describe('goals', () => {
           .end((err, res) => {
             expect(res.status).to.equal(404);
             expect(res.body.errors).to.have.length(1);
-            expect(res.body.errors[0].detail).to.be.equal('goal not found');
+            expect(res.body.errors[0].detail).to.be.equal('resource not found');
             done(err);
           });
       });

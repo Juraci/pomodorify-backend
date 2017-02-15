@@ -134,7 +134,7 @@ describe('tasks', () => {
           .end((err, res) => {
             expect(res.status).to.equal(404);
             expect(res.body.errors).to.have.length(1);
-            expect(res.body.errors[0].detail).to.equal('task not found');
+            expect(res.body.errors[0].detail).to.equal('resource not found');
             done(err);
           });
       });
@@ -185,7 +185,7 @@ describe('tasks', () => {
           .end((err, res) => {
             expect(res.status).to.equal(404);
             expect(res.body.errors).to.have.length(1);
-            expect(res.body.errors[0].detail).to.be.equal('task not found');
+            expect(res.body.errors[0].detail).to.be.equal('resource not found');
             done(err);
           });
       });

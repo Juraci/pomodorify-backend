@@ -26,6 +26,25 @@ class ApplicationController {
       .catch(err => ApplicationController.unprocessableEntity(err));
   }
 
+  findById(id) {
+    return this.model.find({
+      where: { id: parseInt(id, 10) },
+      include: this.relations,
+    })
+      .then(record => ApplicationController.throwIfNotFound(record))
+      .then(record => this.serialize(record))
+      .then(data => ApplicationController.ok(data))
+      .catch(err => ApplicationController.notFound(err));
+  }
+
+  updateById(id, payload) {
+    return this.deserialize(payload)
+      .then(dsPayload => this.model.update(dsPayload, { where: { id: parseInt(id, 10) } }))
+      .then(result => ApplicationController.throwIfNotUpdated(result))
+      .then(() => ApplicationController.noContent())
+      .catch(err => ApplicationController.notFound(err));
+  }
+
   static defaultResponse(status, data) {
     return {
       status,
@@ -66,13 +85,13 @@ class ApplicationController {
     return ApplicationController.jsonApiError(HttpStatus.UNPROCESSABLE_ENTITY, err);
   }
 
-  static throwIfNotFound(resource, resourceType) {
-    if (!resource) { throw new Error(`${resourceType} not found`); }
+  static throwIfNotFound(resource) {
+    if (!resource) { throw new Error('resource not found'); }
     return resource;
   }
 
-  static throwIfNotUpdated(result, resourceType) {
-    if (result[0] !== 1) { throw new Error(`${resourceType} not found`); }
+  static throwIfNotUpdated(result) {
+    if (result[0] !== 1) { throw new Error('resource not found'); }
   }
 }
 
