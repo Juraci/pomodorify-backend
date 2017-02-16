@@ -17,23 +17,14 @@ class GoalsController extends ApplicationController {
   }
 
   static mountGoalObject(data) {
-    let obj;
-    if (Object.prototype.hasOwnProperty.call(data, 'user')) {
-      obj = { description: data.description, userId: data.user.id };
-    } else {
-      obj = { description: data.description };
+    if ('user' in data) {
+      return { description: data.description, userId: data.user.id };
     }
-
-    return obj;
+    return { description: data.description };
   }
 
   create(goal) {
-    return this.deserialize(goal)
-      .then(deserializedGoal => GoalsController.mountGoalObject(deserializedGoal))
-      .then(goalObject => this.Goal.create(goalObject))
-      .then(record => this.serialize(record))
-      .then(serializedGoal => GoalsController.created(serializedGoal))
-      .catch(err => GoalsController.jsonApiError(400, err));
+    return super.create(goal, GoalsController.mountGoalObject);
   }
 
   deleteById(id) {

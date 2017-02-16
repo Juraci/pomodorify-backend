@@ -16,14 +16,14 @@ class TasksController extends ApplicationController {
   }
 
   static mountTaskObject(data) {
-    let obj;
-    if (Object.prototype.hasOwnProperty.call(data, 'goal')) {
-      obj = { description: data.description, goalId: data.goal.id };
-    } else {
-      obj = { description: data.description };
+    if ('goal' in data) {
+      return { description: data.description, goalId: data.goal.id };
     }
+    return { description: data.description };
+  }
 
-    return obj;
+  create(task) {
+    return super.create(task, TasksController.mountTaskObject);
   }
 
   findAll() {
@@ -39,15 +39,6 @@ class TasksController extends ApplicationController {
       .then(task => this.serialize(task))
       .then(data => TasksController.ok(data))
       .catch(err => TasksController.notFound(err));
-  }
-
-  create(task) {
-    return this.deserialize(task)
-      .then(deserializedTask => TasksController.mountTaskObject(deserializedTask))
-      .then(taskObject => this.Task.create(taskObject))
-      .then(record => this.serialize(record))
-      .then(serializedRecord => TasksController.created(serializedRecord))
-      .catch(err => TasksController.jsonApiError(400, err));
   }
 }
 

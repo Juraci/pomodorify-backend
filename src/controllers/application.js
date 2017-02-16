@@ -45,6 +45,15 @@ class ApplicationController {
       .catch(err => ApplicationController.notFound(err));
   }
 
+  create(data, mountObj) {
+    return this.deserialize(data)
+      .then(dsData => mountObj(dsData))
+      .then(mountedObj => this.model.create(mountedObj))
+      .then(record => this.serialize(record))
+      .then(serializedObj => ApplicationController.created(serializedObj))
+      .catch(err => ApplicationController.jsonApiError(400, err));
+  }
+
   static defaultResponse(status, data) {
     return {
       status,
