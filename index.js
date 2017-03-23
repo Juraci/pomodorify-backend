@@ -1,28 +1,17 @@
 const app = require('./build/app.js').default;
+const resilientStart = require('./resilientStart');
 
 const port = process.env.PORT || 3000;
-const connectionMaxAttempts = 3;
-const connectionRetryTime = 1000;
-let connectionAttempts = 0;
 
-const startApp = () => {
-  app.datasource.sequelize.sync().then(() => {
-    app.listen(port, () => {
-      console.log(`Listening on port ${port}`);
-    });
-  })
-  .catch((err) => {
-    if (err.name.match(/SequelizeConnection/) && connectionAttempts <= connectionMaxAttempts) {
-      connectionAttempts += 1;
-
-      console.log('>>> db connection failed, attempt: ', connectionAttempts);
-      setTimeout(() => {
-        startApp();
-      }, connectionRetryTime);
-    }
-
-    console.log('>> Promise rejection: ', err.name);
-  });
+const appInitializer = (app) => {
+  return app.datasource.sequelize.sync().then(() => app);
 };
 
-startApp();
+resilientStart({
+  app,
+  port,
+  appInitializer,
+  maxAttempts: 3,
+  retryTime: 3000,
+  retryOnError: 'SequelizeConnection'
+});
