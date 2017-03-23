@@ -1,31 +1,19 @@
-const resilientStart = ({ app, port, appInitializer, maxAttempts, retryTime, error }, attempts = 0) => {
-  return appInitializer(app)
-    .then((app) => {
-      app.listen(port, () => {
-        console.log(`Magic on port ${port}`);
-      });
-    })
+const isExpectedError = error => !!error.match(error);
+
+const resilientStart = ({ app, port, appInitializer, retryTime, error }) =>
+  appInitializer(app)
     .catch((err) => {
-      if (!isExpectedError(err.name) || attempts >= maxAttempts) {
+      if (!isExpectedError(err.name)) {
         throw err;
       }
 
-      attempts += 1;
-      setTimeout(() => {
-        return resilientStart({
-          app,
-          port,
-          appInitializer,
-          maxAttempts,
-          retryTime,
-          error
-        }, attempts);
-      }, retryTime);
+      setTimeout(() => resilientStart({
+        app,
+        port,
+        appInitializer,
+        retryTime,
+        error,
+      }), retryTime);
     });
-};
 
-const isExpectedError = (error) => {
-  return !!error.match(error);
-};
-
-module.exports  = resilientStart;
+module.exports = resilientStart;

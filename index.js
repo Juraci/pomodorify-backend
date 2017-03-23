@@ -4,14 +4,18 @@ const resilientStart = require('./resilientStart');
 const port = process.env.PORT || 3000;
 
 const appInitializer = (app) => {
-  return app.datasource.sequelize.sync().then(() => app);
+  return app.datasource.sequelize.sync()
+    .then(() => {
+      return app.listen(port, () => {
+        console.log(`Magic on port ${port}`);
+      });
+    });
 };
 
 resilientStart({
   app,
   port,
   appInitializer,
-  maxAttempts: 3,
   retryTime: 3000,
   retryOnError: 'SequelizeConnection'
 });
